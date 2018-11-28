@@ -1,3 +1,6 @@
+
+var sceneMabager = new SceneManager();
+
 var config = {
     type: Phaser.AUTO,
     parent: 'content',
@@ -12,7 +15,7 @@ var config = {
         }
     },
     scene: [
-        //TODO scenes
+        BootScene
     ]
 };
 var game = new Phaser.Game(config);
