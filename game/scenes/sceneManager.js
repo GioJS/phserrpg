@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var SceneManager = (function(){
 		function SceneManager() {
 			currentScene = 'game_boot';
@@ -11,4 +9,4 @@ var SceneManager = (function(){
 		return SceneManager;
 }());
 
-exports.LevelManager = LevelManager;
+
