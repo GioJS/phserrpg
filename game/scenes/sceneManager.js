@@ -1,10 +1,10 @@
 var SceneManager = (function(){
 		function SceneManager() {
-			currentScene = 'game_boot';
-			scenesList = {};
+			this.currentScene = 'game_boot';
+			this.scenesList = {};
 		};
 		SceneManager.prototype.getCurrentScene = function(game) { 
-			return this.scenesList[currentScene]; 
+			return this.scenesList[this.currentScene];
 		};
 		return SceneManager;
 }());
