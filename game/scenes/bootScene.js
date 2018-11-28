@@ -6,7 +6,7 @@ var BootScene = new Phaser.Class({
 
         function BootScene ()
         {
-            //Phaser.Scene.call(this, { key: 'BootScene' });
+            Phaser.Scene.call(this, { key: 'BootScene' });
         },
 
     preload: function ()
@@ -16,6 +16,8 @@ var BootScene = new Phaser.Class({
 
     create: function ()
     {
-        this.scene.start('WorldScene');
+        //this.scene.start('WorldScene');
+        var text = this.scene.add.text(this.game.world.centerX, this.game.world.centerY, "Press Enter");
+        text.anchor.setTo(0.5);
     }
 });
