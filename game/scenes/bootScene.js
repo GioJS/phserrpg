@@ -17,7 +17,7 @@ var BootScene = new Phaser.Class({
     create: function ()
     {
         //this.scene.start('WorldScene');
-        var text = this.scene.add.text(this.game.world.centerX, this.game.world.centerY, "Press Enter");
-        text.anchor.setTo(0.5);
+        var text = this.add.text(this.cameras.main.centerX/2, this.cameras.main.centerY, "Final Phaser");
+        text.setScale(1.5);
     }
 });
