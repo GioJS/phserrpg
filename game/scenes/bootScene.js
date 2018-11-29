@@ -35,7 +35,6 @@ var BootScene = new Phaser.Class({
         load.setColor("#000000");
 
         this.cursor = this.physics.add.sprite(this.cameras.main.centerX/2, this.cameras.main.centerY/2 + 60,'finger');
-
         /*this.physics.world.bounds.width = this.cameras.main.centerX/2 + 20;
         this.physics.world.bounds.height = this.cameras.main.centerY/2 + 80;
         this.cursor.setCollideWorldBounds(true);*/
@@ -46,6 +45,18 @@ var BootScene = new Phaser.Class({
         }
         if(this.cursors.up.isDown) {
             this.cursor.y = this.cameras.main.centerY/2 + 60;
+        }
+
+        if(this.cursors.space.isDown) {
+            if(this.cursor.y === this.cameras.main.centerY/2 + 60) { // start game
+                console.log("start")
+            } else {
+                //load game
+                console.log("load screen")
+            }
+
+
+
         }
     }
     
