@@ -86,7 +86,7 @@ var InitialScene = new Phaser.Class({
         {
             this.player.body.setVelocityY(80);
         }
-
+        //animation
         if (this.cursors.left.isDown)
         {
             this.player.anims.play('left', true);
