@@ -10,7 +10,6 @@ var BootScene = new Phaser.Class({
         },
 
     preload: function () {
-        // load the resources here
         this.load.image('finger', 'game/assets/finger.png');
         this.cursors = this.input.keyboard.createCursorKeys();
         this.centerX = this.cameras.main.centerX / 2;
@@ -24,7 +23,6 @@ var BootScene = new Phaser.Class({
     },
 
     create: function () {
-        //this.scene.start('WorldScene');
         this.cameras.main.setBackgroundColor("#ffffff");
 
         var text = this.add.text(this.centerX, this.centerY, "Final Phaser");
