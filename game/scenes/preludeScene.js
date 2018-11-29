@@ -1,11 +1,11 @@
-var WorldScene = new Phaser.Class({
+var PreludeScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize:
 
         function WorldScene() {
-            Phaser.Scene.call(this, {key: 'WorldScene'});
+            Phaser.Scene.call(this, {key: 'PreludeScene'});
         },
     preload: function () {
         this.centerX = this.cameras.main.centerX / 2 - 15;
