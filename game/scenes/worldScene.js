@@ -31,7 +31,7 @@ var WorldScene = new Phaser.Class({
             targets: [this.text],
             alpha: 0,
             duration: 5000,
-            ease: 'Phaser.Easing.Linear.None',
+            ease: 'Linear.None',
             repeat: 1,
             yoyo: false
         });
