@@ -32,6 +32,10 @@ var BootScene = new Phaser.Class({
         var start = this.add.text(this.startX, this.startY, "New Game");
         start.setScale(1.0);
         start.setColor("#000000");
+        start.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            this.scene.scene.start('WorldScene');
+        });
+
 
         var load = this.add.text(this.startX, this.loadY, "Load Game");
         load.setScale(1.0);
