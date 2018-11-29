@@ -12,10 +12,13 @@ var InitialScene = new Phaser.Class({
         this.load.tilemapTiledJSON('map', 'game/assets/map/map.json');
         this.load.spritesheet('player', 'game/assets/pgsheets.png', { frameWidth: 16, frameHeight: 16 });
         this.cursors = this.input.keyboard.createCursorKeys();
+        this.load.image('up', 'game/assets/arrow.png');
+        this.load.image('down', 'game/assets/arrow.png');
+        this.load.image('left', 'game/assets/arrow.png');
+        this.load.image('right', 'game/assets/arrow.png');
 
     },
     create: function () {
-        console.log('ok')
         var map = this.make.tilemap({ key: 'map' });
 
         var tiles = map.addTilesetImage('spritesheet', 'tiles');
@@ -29,6 +32,7 @@ var InitialScene = new Phaser.Class({
         this.physics.world.bounds.width = map.widthInPixels;
         this.physics.world.bounds.height = map.heightInPixels;
         this.player.setCollideWorldBounds(true);
+
 
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(this.player);
@@ -63,6 +67,24 @@ var InitialScene = new Phaser.Class({
         });
 
         this.physics.add.collider(this.player, obstacles);
+
+
+        this.up = this.physics.add.sprite(50, 160, 'up');
+        this.up.scaleX = 0.5;
+        this.up.scaleY = 0.5;
+        this.up.angle = -90;
+        this.down = this.physics.add.sprite(50, 200, 'down');
+        this.down.scaleX = 0.5;
+        this.down.scaleY = 0.5;
+        this.down.angle = +90;
+        this.left = this.physics.add.sprite(20, 180, 'left');
+        this.left.scaleX = 0.5;
+        this.left.scaleY = 0.5;
+        this.left.angle = -180;
+        this.right = this.physics.add.sprite(80, 180, 'right');
+        this.right.scaleX = 0.5;
+        this.right.scaleY = 0.5;
+        this.right.angle = 360;
     },
     update: function(time, delta) {
         this.player.body.setVelocity(0);
