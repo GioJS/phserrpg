@@ -38,6 +38,14 @@ var BootScene = new Phaser.Class({
         load.setColor("#000000");
 
         this.cursor = this.physics.add.sprite(this.centerX, this.cursorY, 'finger');
+        var tween = this.tweens.add({
+            targets: [this.cursor],
+            x: this.cursor.x - 10,
+            duration: 700,
+            ease: 'Sine.easeInOut',
+            repeat: -1,
+            yoyo: true
+        });
 
     },
     update: function () {
