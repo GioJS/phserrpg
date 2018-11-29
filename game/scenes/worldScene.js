@@ -20,7 +20,7 @@ var WorldScene = new Phaser.Class({
     },
     create: function () {
         this.prelude();
-        this.time.addEvent({delay: 5000, callback: this.prelude, callbackScope: this, repeat: 2});﻿﻿
+        this.time.addEvent({delay: 5000, callback: this.prelude, callbackScope: this, repeat: 2});
     },
     prelude: function () {
         if (this.text !== null)
