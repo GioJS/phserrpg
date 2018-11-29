@@ -20,6 +20,7 @@ var BootScene = new Phaser.Class({
         this.cursorY = this.cameras.main.centerY / 2 + 60;
         this.cursorStart = this.centerY + 60;
         this.cursorLoad = this.centerY + 90;
+        this.firstTapStart = false;
     },
 
     create: function () {
@@ -33,13 +34,29 @@ var BootScene = new Phaser.Class({
         start.setScale(1.0);
         start.setColor("#000000");
         start.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
-            this.scene.scene.start('WorldScene');
+            this.scene.firstTapLoad = false;
+            if(!this.scene.firstTapStart) {
+                this.scene.cursor.y = this.scene.cursorStart;
+                this.scene.firstTapStart = true;
+            } else {
+                this.scene.scene.start('WorldScene');
+            }
         });
 
 
         var load = this.add.text(this.startX, this.loadY, "Load Game");
         load.setScale(1.0);
         load.setColor("#000000");
+
+        load.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            this.scene.firstTapStart = false;
+            if(!this.scene.firstTapLoad) {
+                this.scene.cursor.y = this.scene.cursorLoad;
+                this.scene.firstTapLoad = true;
+            } else {
+                //this.scene.scene.start('WorldScene');
+            }
+        });
 
         this.cursor = this.physics.add.sprite(this.centerX, this.cursorY, 'finger');
         var tween = this.tweens.add({
