@@ -10,10 +10,30 @@ var WorldScene = new Phaser.Class({
     preload: function () {
         this.centerX = this.cameras.main.centerX / 2 - 15;
         this.centerY = this.cameras.main.centerY / 2 + 30;
+        this.counter = 0;
+        this.preludeText = [
+            'A long time ago...',
+            'the wizard lord begin a \nwar against humanity',
+            'after centuries seems \nthe wizard lord is winning...'
+        ];
+        this.text = null;
     },
     create: function () {
-        var text = this.add.text(this.centerX, this.centerY, "A long time ago...");
-        text.setScale(1.2);
-        text.setColor('#ffffff');
+        this.time.addEvent({ delay: 5000, callback: this.prelude, callbackScope: this, repeat: 3});﻿﻿
+    },
+    prelude: function () {
+        if(this.text !== null)
+            this.text.destroy();
+        this.text = this.add.text(this.centerX, this.centerY, this.preludeText[this.counter++]);
+        this.text.setScale(0.8);
+        this.text.setColor('#ffffff');
+        this.tweens.add({
+            targets: [this.text],
+            alpha: 0,
+            duration: 5000,
+            ease: 'Phaser.Easing.Linear.None',
+            repeat: 1,
+            yoyo: false
+        });
     }
 });
