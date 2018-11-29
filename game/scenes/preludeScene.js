@@ -20,7 +20,6 @@ var PreludeScene = new Phaser.Class({
     create: function () {
         this.prelude();
         this.evt = this.time.addEvent({delay: 5000, callback: this.prelude, callbackScope: this, repeat: 2});
-        //evt.on('complete', function() {this.scene.scene.start('InitialMap')}, this);
     },
     prelude: function () {
         if (this.text !== null)
