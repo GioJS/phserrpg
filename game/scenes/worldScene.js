@@ -19,10 +19,10 @@ var WorldScene = new Phaser.Class({
         this.text = null;
     },
     create: function () {
-        this.time.addEvent({ delay: 5000, callback: this.prelude, callbackScope: this, repeat: 3});﻿﻿
+        this.time.addEvent({delay: 5000, callback: this.prelude, callbackScope: this, repeat: 3});﻿﻿
     },
     prelude: function () {
-        if(this.text !== null)
+        if (this.text !== null)
             this.text.destroy();
         this.text = this.add.text(this.centerX, this.centerY, this.preludeText[this.counter++]);
         this.text.setScale(0.8);
