@@ -10,7 +10,6 @@ var WorldScene = new Phaser.Class({
     preload: function () {
         this.centerX = this.cameras.main.centerX / 2 - 15;
         this.centerY = this.cameras.main.centerY / 2 + 30;
-        this.counter = 0;
         this.preludeText = [
             'A long time ago...',
             'the wizard lord begin a \nwar against humanity',
@@ -25,7 +24,7 @@ var WorldScene = new Phaser.Class({
     prelude: function () {
         if (this.text !== null)
             this.text.destroy();
-        this.text = this.add.text(this.centerX, this.centerY, this.preludeText[this.counter++]);
+        this.text = this.add.text(this.centerX, this.centerY, this.preludeText.shift());
         this.text.setScale(0.8);
         this.text.setColor('#ffffff');
         this.tweens.add({
