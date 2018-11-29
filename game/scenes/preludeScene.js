@@ -42,6 +42,6 @@ var PreludeScene = new Phaser.Class({
             this.scene.start('InitialMap');
     },
     completed: function () {
-        return this.evt.getOverallProgress() == 1;
+        return this.evt.getOverallProgress() === 1;
     }
 });
