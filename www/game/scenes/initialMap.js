@@ -87,6 +87,9 @@ var InitialScene = new Phaser.Class({
         this.up.setScrollFactor(0);
         this.up.on('pointerdown', function(pointer, localX, localY, event){
             this.moveUpT = true;
+            this.moveDownT = false;
+            this.moveLeftT = false;
+            this.moveRightT = false;
         }, this);
 
         this.up.on('pointerup', function(pointer, localX, localY, event){
@@ -101,6 +104,9 @@ var InitialScene = new Phaser.Class({
         this.down.setScrollFactor(0);
         this.down.on('pointerdown', function(pointer, localX, localY, event){
             this.moveDownT = true;
+            this.moveUpT = false;
+            this.moveLeftT = false;
+            this.moveRightT = false;
         }, this);
 
         this.down.on('pointerup', function(pointer, localX, localY, event){
@@ -115,6 +121,9 @@ var InitialScene = new Phaser.Class({
 
         this.left.on('pointerdown', function(pointer, localX, localY, event){
             this.moveLeftT = true;
+            this.moveUpT = false;
+            this.moveDownT = false;
+            this.moveRightT = false;
         }, this);
 
         this.left.on('pointerup', function(pointer, localX, localY, event){
@@ -129,6 +138,9 @@ var InitialScene = new Phaser.Class({
         this.right.setScrollFactor(0);
         this.right.on('pointerdown', function(pointer, localX, localY, event){
             this.moveRightT = true;
+            this.moveUpT = false;
+            this.moveDownT = false;
+            this.moveLeftT = false;
         }, this);
 
         this.right.on('pointerup', function(pointer, localX, localY, event){
@@ -165,7 +177,7 @@ var InitialScene = new Phaser.Class({
         }
         this.movement();
     },
-    movement: function () {
+    movement: function () { //TODO extract to class
         // Horizontal movement
         if (this.moveLeft || this.moveLeftT)
         {
