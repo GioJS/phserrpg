@@ -12,7 +12,8 @@ var Unit = new Phaser.Class({
     attack: function(target) {
         var tween = this.scene.tweens.add({
             targets: [this],
-            x: target.x - 20,
+            x: target.x + (target.x < this.x ? 20: -20),
+            y: target.y,
             duration: 700,
             ease: 'Quadratic.InOut',
             repeat: 0,
