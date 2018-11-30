@@ -8,6 +8,7 @@ var Unit = new Phaser.Class({
             this.type = type;
             this.maxHp = this.hp = hp;
             this.damage = damage; // default damage
+            this.isAlive = true;
         },
     attack: function(target) {
         var tween = this.scene.tweens.add({
@@ -30,7 +31,7 @@ var Unit = new Phaser.Class({
         this.hp -= damage;
         if(this.hp <= 0) {
             this.hp = 0;
-            this.alive = false;
+            this.isAlive = false;
         }
     }
 });

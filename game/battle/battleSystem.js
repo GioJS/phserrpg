@@ -12,17 +12,17 @@ var BattleScene = new Phaser.Class({
         this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
 
         // player character - warrior
-        var warrior = new PlayerCharacter(this, 250, 50, 'player', 1, 'Warrior', 100, 20);
+        var warrior = new PlayerCharacter(this, 250, 50, 'player', 1, 'Warrior', 100, 50);
         this.add.existing(warrior);
 
         // player character - mage
-        var mage = new PlayerCharacter(this, 250, 100, 'player', 4, 'Mage', 80, 8);
+        var mage = new PlayerCharacter(this, 250, 100, 'player', 4, 'Mage', 80, 50);
         this.add.existing(mage);
 
-        var dragonblue = new Enemy(this, 50, 50, 'dragonblue', null, 'Dragon', 50, 3);
+        var dragonblue = new Enemy(this, 50, 50, 'dragonblue', null, 'Dragon', 50, 13);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, 'dragonorrange', null, 'Dragon2', 50, 3);
+        var dragonOrange = new Enemy(this, 50, 100, 'dragonorrange', null, 'Dragon2', 50, 10);
         this.add.existing(dragonOrange);
 
         // array with heroes
@@ -38,6 +38,16 @@ var BattleScene = new Phaser.Class({
     },
     nextTurn: function () {
         this.index++;
+        this.unitDead();
+        if (this.checkWin(2)) {
+            this.scene.stop('UIScene');
+            this.scene.start('InitialMap');
+        }
+
+        if (this.checkLose(2)) {
+            this.scene.stop('UIScene');
+            this.scene.start('BootScene')
+        }
         // if there are no more units, we start again from the first one
         if (this.index >= this.units.length) {
             this.index = 0;
@@ -45,22 +55,48 @@ var BattleScene = new Phaser.Class({
         if (this.units[this.index]) {
             // if its player hero
             if (this.units[this.index] instanceof PlayerCharacter) {
-                this.events.emit('PlayerSelect', this.index);
+                if (this.units[this.index].isAlive)
+                    this.events.emit('PlayerSelect', this.index);
             } else { // else if its enemy unit
                 // pick random hero
-                var r = Math.floor(Math.random() * this.heroes.length);
-                // call the enemy's attack function
-                this.units[this.index].attack(this.heroes[r]);
-                // add timer for the next turn, so will have smooth gameplay
-                this.time.addEvent({delay: 3000, callback: this.nextTurn, callbackScope: this});
+                if (this.units[this.index].isAlive) {
+                    var r = Math.floor(Math.random() * this.heroes.length);
+                    // call the enemy's attack function
+                    this.units[this.index].attack(this.heroes[r]);
+                    // add timer for the next turn, so will have smooth gameplay
+                    this.time.addEvent({delay: 3000, callback: this.nextTurn, callbackScope: this});
+                }
             }
         }
+
+
     },
-    receivePlayerSelection: function(action, target) {
-        if(action === 'attack') {
+    unitDead: function () {
+        this.units.forEach(function (unit) {
+            if(!unit.isAlive){
+                unit.angle = 90;
+            }
+        });
+    },
+    checkWin: function (enemy_size) {
+        return this.units.filter(function (unit) {
+            if (unit instanceof Enemy && !unit.isAlive) {
+                return unit;
+            }
+        }).length === enemy_size;
+    },
+    checkLose: function (team_size) {
+        return this.units.filter(function (unit) {
+            if (unit instanceof PlayerCharacter && !unit.isAlive) {
+                return unit;
+            }
+        }).length === team_size;
+    },
+    receivePlayerSelection: function (action, target) {
+        if (action === 'attack') {
             this.units[this.index].attack(this.enemies[target]);
         }
-        this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
+        this.time.addEvent({delay: 3000, callback: this.nextTurn, callbackScope: this});
     }
 });
 
@@ -134,18 +170,18 @@ var UIScene = new Phaser.Class({
             }
         }
     },
-    onEnemy: function(index) {
+    onEnemy: function (index) {
         this.heroesMenu.deselect();
         this.actionsMenu.deselect();
         this.enemiesMenu.deselect();
         this.currentMenu = null;
         this.battleScene.receivePlayerSelection('attack', index);
     },
-    onSelectEnemies: function() {
+    onSelectEnemies: function () {
         this.currentMenu = this.enemiesMenu;
         this.enemiesMenu.select(0);
     },
-    onPlayerSelect: function(id) {
+    onPlayerSelect: function (id) {
         this.heroesMenu.select(id);
         this.actionsMenu.select(0);
         this.currentMenu = this.actionsMenu;
@@ -230,7 +266,8 @@ var Menu = new Phaser.Class({
         this.clear();
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            this.addMenuItem(unit.type);
+            if (unit.isAlive)
+                this.addMenuItem(unit.type);
         }
     }
 });
@@ -286,20 +323,25 @@ var Message = new Phaser.Class({
             graphics.fillStyle(0x031f4c, 0.3);
             graphics.strokeRect(-90, -15, 180, 30);
             graphics.fillRect(-90, -15, 180, 30);
-            this.text = new Phaser.GameObjects.Text(scene, 0, 0, "", { color: '#ffffff', align: 'center', fontSize: 13, wordWrap: { width: 160, useAdvancedWrap: true }});
+            this.text = new Phaser.GameObjects.Text(scene, 0, 0, "", {
+                color: '#ffffff',
+                align: 'center',
+                fontSize: 13,
+                wordWrap: {width: 160, useAdvancedWrap: true}
+            });
             this.add(this.text);
             this.text.setOrigin(0.5);
             events.on("Message", this.showMessage, this);
             this.visible = false;
         },
-    showMessage: function(text) {
+    showMessage: function (text) {
         this.text.setText(text);
         this.visible = true;
-        if(this.hideEvent)
+        if (this.hideEvent)
             this.hideEvent.remove(false);
-        this.hideEvent = this.scene.time.addEvent({ delay: 2000, callback: this.hideMessage, callbackScope: this });
+        this.hideEvent = this.scene.time.addEvent({delay: 2000, callback: this.hideMessage, callbackScope: this});
     },
-    hideMessage: function() {
+    hideMessage: function () {
         this.hideEvent = null;
         this.visible = false;
     }
