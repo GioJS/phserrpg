@@ -149,7 +149,7 @@ var InitialScene = new Phaser.Class({
         {
             this.moveLeft = true;
         }
-        else if (this.cursors.right.isDown || this.moveRight)
+        else if (this.cursors.right.isDown)
         {
             this.moveRight = true;
         }
