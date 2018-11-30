@@ -165,7 +165,7 @@ var InitialScene = new Phaser.Class({
         }
         this.movement();
     },
-    movement: function () {
+    movement: function () { //TODO extract to class
         // Horizontal movement
         if (this.moveLeft || this.moveLeftT)
         {
