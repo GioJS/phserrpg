@@ -156,8 +156,8 @@ var InitialScene = new Phaser.Class({
             }, this);
         }
         // where the enemies will be
-        this.spawns = this.physics.add.group({ classType: Phaser.GameObjects.Zone });
-        for(var i = 0; i < 30; i++) {
+        this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});
+        for (var i = 0; i < 30; i++) {
             var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
             var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
             // parameters are x, y, width, height
@@ -166,6 +166,8 @@ var InitialScene = new Phaser.Class({
         this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
         // we listen for 'wake' event
         this.sys.events.on('wake', this.wake, this);
+
+        this.stopMove = false;
 
     },
     update: function (time, delta) {
@@ -190,25 +192,39 @@ var InitialScene = new Phaser.Class({
         }
         this.movement();
     },
-    wake: function() {
+    wake: function () {
         this.cursors.left.reset();
         this.cursors.right.reset();
         this.cursors.up.reset();
         this.cursors.down.reset();
     },
-    onMeetEnemy: function(player, zone) {
+    onMeetEnemy: function (player, zone) {
         // we move the zone to some other location
         zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
         zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
         // shake the world
-        this.cameras.main.shake(300);
-
+        this.cameras.main.shake(2000);
         this.input.stopPropagation();
+        this.stopMove = true;
         // start battle
-        this.scene.switch('BattleScene');
+        this.scene.scene.tweens.add({
+            targets: [this.scene.scene],
+            duration: 2000,
+            alpha: 0,
+            ease: 'Linear.None',
+            repeat: 0,
+            yoyo: false,
+            onComplete: function () {
+                this.scene.switch('BattleScene');
+                this.stopMove = false;
+            },
+            onCompleteScope: this
+        });
     },
     movement: function () { //TODO extract to class
+        if(this.stopMove)
+            return;
         // Horizontal movement
         if (this.moveLeft || this.moveLeftT) {
             this.player.body.setVelocityX(-80);

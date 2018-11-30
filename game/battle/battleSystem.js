@@ -14,7 +14,7 @@ var BattleScene = new Phaser.Class({
         // on wake event we call startBattle too
         this.sys.events.on('wake', this.startBattle, this);
     },
-    endBattle: function () {
+    endBattle: function (end) {
         // clear state, remove sprites
         this.heroes.length = 0;
         this.enemies.length = 0;
@@ -26,7 +26,11 @@ var BattleScene = new Phaser.Class({
         // sleep the UI
         this.scene.sleep('UIScene');
         // return to WorldScene and sleep current BattleScene
-        this.scene.switch('InitialMap');
+        if(end.victory)
+            this.scene.switch('InitialMap');
+        else {
+            this.scene.switch('BootScene');
+        }
     },
     startBattle: function () {
         // player character - warrior
@@ -67,12 +71,13 @@ var BattleScene = new Phaser.Class({
             if (this.heroes[i].living)
                 gameOver = false;
         }
-        return victory || gameOver;
+        return {victory: victory,gameOver: gameOver};
     },
     nextTurn: function () {
         // if we have victory or game over
-        if (this.checkEndBattle()) {
-            this.endBattle();
+        var end = this.checkEndBattle();
+        if (end.victory || end.gameOver) {
+            this.endBattle(end);
             return;
         }
         do {

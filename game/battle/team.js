@@ -21,7 +21,7 @@ var Unit = new Phaser.Class({
                 targets: [this],
                 x: target.x + (target.x < this.x ? 20 : -20),
                 y: target.y,
-                duration: 700,
+                duration: 500,
                 ease: 'Quadratic.InOut',
                 repeat: 0,
                 yoyo: true,
@@ -48,7 +48,7 @@ var Unit = new Phaser.Class({
                 this.scene.tweens.add({
                     targets: [this],
                     alpha: 0,
-                    duration: 5000,
+                    duration: 2000,
                     ease: 'Linear.None',
                     repeat: 0,
                     yoyo: false,
