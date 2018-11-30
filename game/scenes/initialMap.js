@@ -17,6 +17,10 @@ var InitialScene = new Phaser.Class({
         this.load.image('left', 'game/assets/arrow.png');
         this.load.image('right', 'game/assets/arrow.png');
 
+        //level enemies
+        this.load.image('dragonblue', 'game/assets/dragonblue.png');
+        this.load.image('dragonorrange', 'game/assets/dragonorrange.png');
+
     },
     create: function () {
         var map = this.make.tilemap({key: 'map'});
@@ -70,6 +74,13 @@ var InitialScene = new Phaser.Class({
 
         this.physics.add.collider(this.player, obstacles);
 
+        this.time.addEvent({
+            delay: 2000,
+            callback: function () {
+                this.scene.start('BattleScene');
+            },
+            callbackScope: this
+        });
 
         this.moveUp = false;
         this.moveDown = false;
