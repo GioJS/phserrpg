@@ -155,6 +155,17 @@ var InitialScene = new Phaser.Class({
                 this.moveRightT = false;
             }, this);
         }
+        // where the enemies will be
+        this.spawns = this.physics.add.group({ classType: Phaser.GameObjects.Zone });
+        for(var i = 0; i < 30; i++) {
+            var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+            var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+            // parameters are x, y, width, height
+            this.spawns.create(x, y, 20, 20);
+        }
+        this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
+        // we listen for 'wake' event
+        this.sys.events.on('wake', this.wake, this);
 
     },
     update: function (time, delta) {
@@ -178,13 +189,24 @@ var InitialScene = new Phaser.Class({
             this.moveDown = true;
         }
         this.movement();
+    },
+    wake: function() {
+        this.cursors.left.reset();
+        this.cursors.right.reset();
+        this.cursors.up.reset();
+        this.cursors.down.reset();
+    },
+    onMeetEnemy: function(player, zone) {
+        // we move the zone to some other location
+        zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+        zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
-        this.evt = this.time.addEvent({delay: 3000, callback: function () {
+        // shake the world
+        this.cameras.main.shake(300);
 
-                this.scene.start('BattleScene');
-
-
-            }, callbackScope: this, repeat: 0});
+        this.input.stopPropagation();
+        // start battle
+        this.scene.switch('BattleScene');
     },
     movement: function () { //TODO extract to class
         // Horizontal movement

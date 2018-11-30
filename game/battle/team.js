@@ -8,30 +8,59 @@ var Unit = new Phaser.Class({
             this.type = type;
             this.maxHp = this.hp = hp;
             this.damage = damage; // default damage
-            this.isAlive = true;
+            this.living = true;
+            this.menuItem = null;
         },
+    // we will use this to notify the menu item when the unit is dead
+    setMenuItem: function(item) {
+        this.menuItem = item;
+    },
     attack: function(target) {
-        var tween = this.scene.tweens.add({
-            targets: [this],
-            x: target.x + (target.x < this.x ? 20: -20),
-            y: target.y,
-            duration: 700,
-            ease: 'Quadratic.InOut',
-            repeat: 0,
-            yoyo: true,
-            onComplete: function () {
-                target.takeDamage(this.damage);
-                this.scene.events.emit("Message", this.type + " attacks " + target.type + " for " + this.damage + " damage");
-            },
-            onCompleteScope: this
-        });
-
+        if(target.living) {
+            var tween = this.scene.tweens.add({
+                targets: [this],
+                x: target.x + (target.x < this.x ? 20 : -20),
+                y: target.y,
+                duration: 700,
+                ease: 'Quadratic.InOut',
+                repeat: 0,
+                yoyo: true,
+                onComplete: function () {
+                    target.takeDamage(this.damage);
+                    this.scene.events.emit("Message", this.type + " attacks " + target.type + " for " + this.damage + " damage");
+                },
+                onCompleteScope: this
+            });
+        }
     },
     takeDamage: function(damage) {
         this.hp -= damage;
         if(this.hp <= 0) {
             this.hp = 0;
-            this.isAlive = false;
+            this.menuItem.unitKilled();
+            this.living = false;
+            if(this instanceof  PlayerCharacter){
+                this.angle = 90;
+            }
+
+            if(this instanceof  Enemy){
+
+                this.scene.tweens.add({
+                    targets: [this],
+                    alpha: 0,
+                    duration: 5000,
+                    ease: 'Linear.None',
+                    repeat: 0,
+                    yoyo: false,
+                    onComplete: function () {
+                        this.destroy();
+                    },
+                    onCompleteScope: this
+                });
+            }
+
+
+            this.menuItem = null;
         }
     }
 });
