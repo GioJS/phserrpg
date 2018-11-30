@@ -39,7 +39,7 @@ var BootScene = new Phaser.Class({
                 this.scene.cursor.y = this.scene.cursorStart;
                 this.scene.firstTapStart = true;
             } else {
-                this.scene.scene.start('WorldScene');
+                this.scene.scene.start('PreludeScene');
             }
         });
 
@@ -80,7 +80,7 @@ var BootScene = new Phaser.Class({
         if (this.cursors.space.isDown) {
             if (this.cursor.y === this.cursorStart) { // start game
                 console.log("start");
-                this.scene.start('WorldScene');
+                this.scene.start('PreludeScene');
             } else {
                 //load game
                 console.log("load screen")

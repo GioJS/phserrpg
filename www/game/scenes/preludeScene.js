@@ -19,7 +19,7 @@ var PreludeScene = new Phaser.Class({
     },
     create: function () {
         this.prelude();
-        this.time.addEvent({delay: 5000, callback: this.prelude, callbackScope: this, repeat: 2});
+        this.evt = this.time.addEvent({delay: 5000, callback: this.prelude, callbackScope: this, repeat: 2});
     },
     prelude: function () {
         if (this.text !== null)
@@ -35,5 +35,12 @@ var PreludeScene = new Phaser.Class({
             repeat: 1,
             yoyo: false
         });
+    },
+    update: function () {
+        if(this.completed())
+            this.scene.start('InitialMap');
+    },
+    completed: function () {
+        return this.evt.getOverallProgress() === 1;
     }
 });
