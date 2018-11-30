@@ -4,7 +4,7 @@ var InitialScene = new Phaser.Class({
 
     initialize:
 
-        function WorldScene() {
+        function InitialScene() {
             Phaser.Scene.call(this, {key: 'InitialMap'});
         },
     preload: function () {
@@ -42,6 +42,7 @@ var InitialScene = new Phaser.Class({
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true;
 
+        this.start = this.time.now;
 
         //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
         this.anims.create({
@@ -74,14 +75,6 @@ var InitialScene = new Phaser.Class({
 
         this.physics.add.collider(this.player, obstacles);
 
-        this.time.addEvent({
-            delay: 2000,
-            callback: function () {
-                this.scene.start('BattleScene');
-            },
-            callbackScope: this
-        });
-
         this.moveUp = false;
         this.moveDown = false;
         this.moveLeft = false;
@@ -108,6 +101,8 @@ var InitialScene = new Phaser.Class({
             this.up.on('pointerup', function (pointer, localX, localY, event) {
                 this.moveUpT = false;
             }, this);
+
+            this.latest = 10000;
 
             this.down = this.add.sprite(50, 200, 'down').setInteractive();
             this.down.scaleX = 0.5;
@@ -183,6 +178,13 @@ var InitialScene = new Phaser.Class({
             this.moveDown = true;
         }
         this.movement();
+
+        this.evt = this.time.addEvent({delay: 3000, callback: function () {
+
+                this.scene.start('BattleScene');
+
+
+            }, callbackScope: this, repeat: 0});
     },
     movement: function () { //TODO extract to class
         // Horizontal movement

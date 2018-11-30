@@ -73,8 +73,24 @@ var BattleScene = new Phaser.Class({
     },
     unitDead: function () {
         this.units.forEach(function (unit) {
-            if(!unit.isAlive){
+            if(unit instanceof  PlayerCharacter && !unit.isAlive){
                 unit.angle = 90;
+            }
+
+            if(unit instanceof  Enemy && !unit.isAlive && unit.scene){
+
+                unit.scene.tweens.add({
+                    targets: [unit],
+                    alpha: 0,
+                    duration: 5000,
+                    ease: 'Linear.None',
+                    repeat: 0,
+                    yoyo: false,
+                    onComplete: function () {
+                        unit.destroy();
+                    },
+                    onCompleteScope: this
+                });
             }
         });
     },
@@ -109,9 +125,13 @@ var UIScene = new Phaser.Class({
         function UIScene() {
             Phaser.Scene.call(this, {key: 'UIScene'});
         },
-
-    create: function () {
+    init: function() {
         this.battleScene = this.scene.get('BattleScene');
+        this.message = new Message(this);
+        this.add.existing(this.message);
+    },
+    create: function () {
+
 
         this.graphics = this.add.graphics();
         this.graphics.lineStyle(1, 0xffffff);
@@ -146,12 +166,14 @@ var UIScene = new Phaser.Class({
         this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
         this.events.on("SelectEnemies", this.onSelectEnemies, this);
         this.events.on("Enemy", this.onEnemy, this);
-        this.message = new Message(this, this.battleScene.events);
-        this.add.existing(this.message);
+
         this.battleScene.nextTurn();
     }, remapHeroes: function () {
         var heroes = this.battleScene.heroes;
         this.heroesMenu.remap(heroes);
+    },
+    close: function() {
+        this.scene.launch('NoScene');
     },
     remapEnemies: function () {
         var enemies = this.battleScene.enemies;
@@ -297,6 +319,7 @@ var ActionsMenu = new Phaser.Class({
 
 });
 
+
 var EnemiesMenu = new Phaser.Class({
     Extends: Menu,
 
@@ -315,7 +338,9 @@ var Message = new Phaser.Class({
     Extends: Phaser.GameObjects.Container,
 
     initialize:
-        function Message(scene, events) {
+        function Message(scene) {
+
+            var events = scene.scene.get('BattleScene').events;
             Phaser.GameObjects.Container.call(this, scene, 160, 30);
             var graphics = this.scene.add.graphics();
             this.add(graphics);
