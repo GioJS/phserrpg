@@ -24,12 +24,21 @@ var BattleScene = new Phaser.Class({
         }
         this.units.length = 0;
         // sleep the UI
-        this.scene.sleep('UIScene');
+
         // return to WorldScene and sleep current BattleScene
-        if(end.victory)
+        if(end.victory) {
+
+            this.scene.sleep('UIScene');
+
             this.scene.switch('InitialMap');
+        }
         else {
-            this.scene.switch('BootScene');
+            this.events.emit("Message","Game Over");
+            this.time.addEvent({delay: 2000, callback: function () {
+                    this.scene.sleep('UIScene');
+                    this.scene.switch('BootScene');
+                }, callbackScope: this});
+            //this.scene.switch('BootScene');
         }
     },
     startBattle: function () {
