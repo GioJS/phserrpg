@@ -110,7 +110,6 @@ var UIScene = new Phaser.Class({
         this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
         this.events.on("SelectEnemies", this.onSelectEnemies, this);
         this.events.on("Enemy", this.onEnemy, this);
-
         this.message = new Message(this, this.battleScene.events);
         this.add.existing(this.message);
         this.battleScene.nextTurn();

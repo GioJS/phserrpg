@@ -10,8 +10,20 @@ var Unit = new Phaser.Class({
             this.damage = damage; // default damage
         },
     attack: function(target) {
-        target.takeDamage(this.damage);
-        this.scene.events.emit("Message", this.type + " attacks " + target.type + " for " + this.damage + " damage");
+        var tween = this.scene.tweens.add({
+            targets: [this],
+            x: target.x - 20,
+            duration: 700,
+            ease: 'Quadratic.InOut',
+            repeat: 0,
+            yoyo: true,
+            onComplete: function () {
+                target.takeDamage(this.damage);
+                this.scene.events.emit("Message", this.type + " attacks " + target.type + " for " + this.damage + " damage");
+            },
+            onCompleteScope: this
+        });
+
     },
     takeDamage: function(damage) {
         this.hp -= damage;
