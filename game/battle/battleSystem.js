@@ -296,7 +296,7 @@ var Menu = new Phaser.Class({
             if(this instanceof ActionsMenu)
                 this.scene.events.emit("SelectedAction");
             else if(this instanceof EnemiesMenu)
-                this.scene.events.emit('Enemy', this);
+                this.scene.events.emit('Enemy', this.menuItemIndex);
         }, this);
         this.menuItems.push(menuItem);
         this.add(menuItem);
