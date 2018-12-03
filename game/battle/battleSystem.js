@@ -361,7 +361,8 @@ var Menu = new Phaser.Class({
     clear: function () {
         for (var i = 0; i < this.menuItems.length; i++) {
             this.menuItems[i].destroy();
-            this.statusItems[i].destroy();
+            if(this.statusItems[i])
+                this.statusItems[i].destroy();
         }
         this.menuItems.length = 0;
         this.statusItems.length = 0;
@@ -372,7 +373,8 @@ var Menu = new Phaser.Class({
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             unit.setMenuItem(this.addMenuItem(unit.type));
-            unit.setTextItem(this.addText(unit));
+            if(unit instanceof PlayerCharacter)
+                unit.setTextItem(this.addText(unit));
         }
         this.menuItemIndex = 0;
     }
