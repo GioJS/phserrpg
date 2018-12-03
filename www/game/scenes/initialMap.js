@@ -4,7 +4,7 @@ var InitialScene = new Phaser.Class({
 
     initialize:
 
-        function WorldScene() {
+        function InitialScene() {
             Phaser.Scene.call(this, {key: 'InitialMap'});
         },
     preload: function () {
@@ -25,6 +25,7 @@ var InitialScene = new Phaser.Class({
     create: function () {
         var map = this.make.tilemap({key: 'map'});
 
+
         var tiles = map.addTilesetImage('spritesheet', 'tiles');
 
         var grass = map.createStaticLayer('Grass', tiles, 0, 0);
@@ -41,6 +42,8 @@ var InitialScene = new Phaser.Class({
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true;
+
+        this.start = this.time.now;
 
 
         //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
@@ -74,141 +77,60 @@ var InitialScene = new Phaser.Class({
 
         this.physics.add.collider(this.player, obstacles);
 
-        this.time.addEvent({
-            delay: 2000,
-            callback: function () {
-                this.scene.start('BattleScene');
-            },
-            callbackScope: this
-        });
 
-        this.moveUp = false;
-        this.moveDown = false;
-        this.moveLeft = false;
-        this.moveRight = false;
 
-        this.moveUpT = false;
-        this.moveDownT = false;
-        this.moveLeftT = false;
-        this.moveRightT = false;
 
-        if (this.game.device.os.android) {
-            this.up = this.add.sprite(50, 160, 'up').setInteractive();
-            this.up.scaleX = 0.5;
-            this.up.scaleY = 0.5;
-            this.up.angle = -90;
-            this.up.setScrollFactor(0);
-            this.up.on('pointerdown', function (pointer, localX, localY, event) {
-                this.moveUpT = true;
-                this.moveDownT = false;
-                this.moveLeftT = false;
-                this.moveRightT = false;
-            }, this);
-
-            this.up.on('pointerup', function (pointer, localX, localY, event) {
-                this.moveUpT = false;
-            }, this);
-
-            this.down = this.add.sprite(50, 200, 'down').setInteractive();
-            this.down.scaleX = 0.5;
-            this.down.scaleY = 0.5;
-            this.down.angle = +90;
-
-            this.down.setScrollFactor(0);
-            this.down.on('pointerdown', function (pointer, localX, localY, event) {
-                this.moveDownT = true;
-                this.moveUpT = false;
-                this.moveLeftT = false;
-                this.moveRightT = false;
-            }, this);
-
-            this.down.on('pointerup', function (pointer, localX, localY, event) {
-                this.moveDownT = false;
-            }, this);
-
-            this.left = this.add.sprite(20, 180, 'left').setInteractive();
-            this.left.scaleX = 0.5;
-            this.left.scaleY = 0.5;
-            this.left.angle = -180;
-            this.left.setScrollFactor(0);
-
-            this.left.on('pointerdown', function (pointer, localX, localY, event) {
-                this.moveLeftT = true;
-                this.moveUpT = false;
-                this.moveDownT = false;
-                this.moveRightT = false;
-            }, this);
-
-            this.left.on('pointerup', function (pointer, localX, localY, event) {
-                this.moveLeftT = false;
-            }, this);
-
-            this.right = this.add.sprite(80, 180, 'right').setInteractive();
-            this.right.scaleX = 0.5;
-            this.right.scaleY = 0.5;
-            this.right.angle = 360;
-
-            this.right.setScrollFactor(0);
-            this.right.on('pointerdown', function (pointer, localX, localY, event) {
-                this.moveRightT = true;
-                this.moveUpT = false;
-                this.moveDownT = false;
-                this.moveLeftT = false;
-            }, this);
-
-            this.right.on('pointerup', function (pointer, localX, localY, event) {
-                this.moveRightT = false;
-            }, this);
+        // where the enemies will be
+        this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});
+        for (var i = 0; i < 30; i++) {
+            var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+            var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+            // parameters are x, y, width, height
+            this.spawns.create(x, y, 20, 20);
         }
+        this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
+        // we listen for 'wake' event
+        this.sys.events.on('wake', this.wake, this);
+
+        this.movement = new Movement(this.player, this);
 
     },
     update: function (time, delta) {
         this.player.body.setVelocity(0);
-        this.moveUp = false;
-        this.moveDown = false;
-        this.moveLeft = false;
-        this.moveRight = false;
+        this.movement.resetMovements();
 
-        // Horizontal movement
-        if (this.cursors.left.isDown) {
-            this.moveLeft = true;
-        } else if (this.cursors.right.isDown) {
-            this.moveRight = true;
-        }
-
-        // Vertical movement
-        if (this.cursors.up.isDown) {
-            this.moveUp = true;
-        } else if (this.cursors.down.isDown) {
-            this.moveDown = true;
-        }
-        this.movement();
+        this.movement.cursorMove();
+        this.movement.movement();
     },
-    movement: function () { //TODO extract to class
-        // Horizontal movement
-        if (this.moveLeft || this.moveLeftT) {
-            this.player.body.setVelocityX(-80);
-        } else if (this.moveRight || this.moveRightT) {
-            this.player.body.setVelocityX(80);
-        }
+    wake: function () {
+        this.cursors.left.reset();
+        this.cursors.right.reset();
+        this.cursors.up.reset();
+        this.cursors.down.reset();
+    },
+    onMeetEnemy: function (player, zone) {
+        // we move the zone to some other location
+        zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+        zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
-        // Vertical movement
-        if (this.moveUp || this.moveUpT) {
-            this.player.body.setVelocityY(-80);
-        } else if (this.moveDown || this.moveDownT) {
-            this.player.body.setVelocityY(80);
-        }
-        //animation
-        if (this.moveLeft || this.moveLeftT) {
-            this.player.anims.play('left', true);
-        } else if (this.moveRight || this.moveRightT) {
-            this.player.anims.play('right', true);
-        } else if (this.moveUp || this.moveUpT) {
-            this.player.anims.play('up', true);
-        } else if (this.moveDown || this.moveDownT) {
-            this.player.anims.play('down', true);
-        } else {
-            this.player.anims.stop();
-        }
-    }
+        // shake the world
+        this.cameras.main.shake(2000);
+        this.input.stopPropagation();
+        this.movement.stop();
+        // start battle
+        this.scene.scene.tweens.add({
+            targets: [this.scene.scene],
+            duration: 2000,
+            alpha: 0,
+            ease: 'Linear.None',
+            repeat: 0,
+            yoyo: false,
+            onComplete: function () {
+                this.scene.switch('BattleScene');
+                this.movement.start();
+            },
+            onCompleteScope: this
+        });
+    },
+
 });
