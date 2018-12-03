@@ -135,7 +135,7 @@ var UIScene = new Phaser.Class({
             Phaser.Scene.call(this, {key: 'UIScene'});
         },
 
-    init: function() {
+    init: function () {
         this.battleScene = this.scene.get("BattleScene");
         // when its player cunit turn to move
         this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
@@ -169,7 +169,6 @@ var UIScene = new Phaser.Class({
         this.menus.add(this.heroesMenu);
         this.menus.add(this.actionsMenu);
         this.menus.add(this.enemiesMenu);
-
 
 
         // listen for keyboard events
@@ -292,6 +291,13 @@ var Menu = new Phaser.Class({
         },
     addMenuItem: function (unit) {
         var menuItem = new MenuItem(0, this.menuItems.length * 20, unit, this.scene);
+        menuItem.setInteractive();
+        menuItem.on('pointerdown', function (pointer, localX, localY, event) {
+            if(this instanceof ActionsMenu)
+                this.scene.events.emit("SelectedAction");
+            else if(this instanceof EnemiesMenu)
+                this.scene.events.emit('Enemy', this);
+        }, this);
         this.menuItems.push(menuItem);
         this.add(menuItem);
         return menuItem;
@@ -310,9 +316,9 @@ var Menu = new Phaser.Class({
             statusItem.setText(unit.hp + "/" + unit.maxHp);
         }
         var perc = unit.hp / unit.maxHp;
-        if(perc <= 0.5 && perc > 0){
+        if (perc <= 0.5 && perc > 0) {
             statusItem.warn();
-        } else if(perc === 0) {
+        } else if (perc === 0) {
             statusItem.ko();
         }
         return statusItem;
@@ -362,7 +368,7 @@ var Menu = new Phaser.Class({
     clear: function () {
         for (var i = 0; i < this.menuItems.length; i++) {
             this.menuItems[i].destroy();
-            if(this.statusItems[i])
+            if (this.statusItems[i])
                 this.statusItems[i].destroy();
         }
         this.menuItems.length = 0;
@@ -375,7 +381,7 @@ var Menu = new Phaser.Class({
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             unit.setMenuItem(this.addMenuItem(unit.type));
-            if(unit instanceof PlayerCharacter)
+            if (unit instanceof PlayerCharacter)
                 unit.setTextItem(this.addText(unit));
         }
         units[this.menuItemIndex].menuItem.select();
@@ -394,19 +400,24 @@ var HeroesMenu = new Phaser.Class({
 });
 
 var ActionsMenu = new Phaser.Class({
-    Extends: Menu,
+        Extends: Menu,
 
-    initialize:
+        initialize:
 
-        function ActionsMenu(x, y, scene) {
-            Menu.call(this, x, y, scene);
-            this.addMenuItem('Attack');
-        },
-    confirm: function () {
-        this.scene.events.emit("SelectedAction");
-    }
+            function ActionsMenu(x, y, scene) {
+                Menu.call(this, x, y, scene);
+                this.addMenuItem('Attack');
 
-});
+
+            },
+        confirm:
+
+            function () {
+                this.scene.events.emit("SelectedAction");
+            }
+
+    })
+;
 
 
 var EnemiesMenu = new Phaser.Class({
