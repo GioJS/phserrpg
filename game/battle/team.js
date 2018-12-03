@@ -36,7 +36,7 @@ var Unit = new Phaser.Class({
                     var crit = Math.random() >= this.critProb;
                     console.log(target);
                     var damage;
-                    if(this.damage + this.critDamage < target.defence)
+                    if((this.damage + this.critDamage) <= target.defence)
                         damage = 0;
                     else
                         damage = this.damage - target.defence + (crit ? this.critDamage : 0);

@@ -229,6 +229,7 @@ var UIScene = new Phaser.Class({
     },
     onPlayerSelect: function (id) {
         this.heroesMenu.select(id);
+        console.log(this.heroesMenu);
         this.actionsMenu.select(0);
         this.currentMenu = this.actionsMenu;
     }
@@ -344,7 +345,7 @@ var Menu = new Phaser.Class({
             this.menuItemIndex++;
             if (this.menuItemIndex >= this.menuItems.length)
                 this.menuItemIndex = 0;
-            if (this.menuItemIndex == index)
+            if (this.menuItemIndex === index)
                 return;
         }
         this.menuItems[this.menuItemIndex].select();
@@ -366,16 +367,18 @@ var Menu = new Phaser.Class({
         }
         this.menuItems.length = 0;
         this.statusItems.length = 0;
-        this.menuItemIndex = 0;
+        //this.menuItemIndex = 0;
     },
     remap: function (units) {
         this.clear();
+
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             unit.setMenuItem(this.addMenuItem(unit.type));
             if(unit instanceof PlayerCharacter)
                 unit.setTextItem(this.addText(unit));
         }
+        units[this.menuItemIndex].menuItem.select();
         this.menuItemIndex = 0;
     }
 });
