@@ -10,10 +10,14 @@ var Unit = new Phaser.Class({
             this.damage = damage; // default damage
             this.living = true;
             this.menuItem = null;
+            this.textItem = null;
         },
     // we will use this to notify the menu item when the unit is dead
     setMenuItem: function(item) {
         this.menuItem = item;
+    },
+    setTextItem: function(item) {
+      this.textItem = item;
     },
     attack: function(target) {
         if(target.living) {

@@ -149,7 +149,7 @@ var Movement = (function() {
         } else {
             this.player.anims.stop();
         }
-    }
+    };
 
     return Movement;
 }());

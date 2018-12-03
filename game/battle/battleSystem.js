@@ -26,18 +26,19 @@ var BattleScene = new Phaser.Class({
         // sleep the UI
 
         // return to WorldScene and sleep current BattleScene
-        if(end.victory) {
+        if (end.victory) {
 
             this.scene.sleep('UIScene');
 
             this.scene.switch('InitialMap');
-        }
-        else {
-            this.events.emit("Message","Game Over");
-            this.time.addEvent({delay: 2000, callback: function () {
+        } else {
+            this.events.emit("Message", "Game Over");
+            this.time.addEvent({
+                delay: 2000, callback: function () {
                     this.scene.sleep('UIScene');
                     this.scene.switch('BootScene');
-                }, callbackScope: this});
+                }, callbackScope: this
+            });
             //this.scene.switch('BootScene');
         }
     },
@@ -50,10 +51,10 @@ var BattleScene = new Phaser.Class({
         var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", 80, 8);
         this.add.existing(mage);
 
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 3);
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 23);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 3);
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 35);
         this.add.existing(dragonOrange);
 
         // array with heroes
@@ -80,11 +81,12 @@ var BattleScene = new Phaser.Class({
             if (this.heroes[i].living)
                 gameOver = false;
         }
-        return {victory: victory,gameOver: gameOver};
+        return {victory: victory, gameOver: gameOver};
     },
     nextTurn: function () {
         // if we have victory or game over
         var end = this.checkEndBattle();
+
         if (end.victory || end.gameOver) {
             this.endBattle(end);
             return;
@@ -113,7 +115,7 @@ var BattleScene = new Phaser.Class({
             this.time.addEvent({delay: 3000, callback: this.nextTurn, callbackScope: this});
         }
 
-
+        this.scene.get('UIScene').remapHeroes();
     },
     receivePlayerSelection: function (action, target) {
         if (action === 'attack') {
@@ -184,7 +186,9 @@ var UIScene = new Phaser.Class({
         this.createMenu();
     }, remapHeroes: function () {
         var heroes = this.battleScene.heroes;
+        console.log(heroes);
         this.heroesMenu.remap(heroes);
+
     },
     createMenu: function () {
         // map hero menu items to heroes
@@ -255,6 +259,28 @@ var MenuItem = new Phaser.Class({
 
 });
 
+var StatusText = new Phaser.Class({
+    Extends: Phaser.GameObjects.Text,
+
+    initialize:
+
+        function StatusText(x, y, text, scene) {
+            Phaser.GameObjects.Text.call(this, scene, x, y, text, {color: '#ffffff', align: 'right', fontSize: 15});
+        },
+
+    warn: function () {
+        this.setColor('#f8ff38');
+    },
+
+    normal: function () {
+        this.setColor('#ffffff');
+    },
+    ko: function () {
+        this.setColor('#ff2e22');
+    }
+
+});
+
 var Menu = new Phaser.Class({
     Extends: Phaser.GameObjects.Container,
 
@@ -263,6 +289,7 @@ var Menu = new Phaser.Class({
         function Menu(x, y, scene, heroes) {
             Phaser.GameObjects.Container.call(this, scene, x, y);
             this.menuItems = [];
+            this.statusItems = [];
             this.menuItemIndex = 0;
             this.heroes = heroes;
             this.x = x;
@@ -273,6 +300,28 @@ var Menu = new Phaser.Class({
         this.menuItems.push(menuItem);
         this.add(menuItem);
         return menuItem;
+    },
+    addText: function (unit) {
+        if (unit instanceof Enemy)
+            return;
+        var statusItem = null;
+        if (this.textItem === undefined) {
+            statusItem = new StatusText(70, this.statusItems.length * 20, unit.hp + "/" + unit.maxHp, this.scene);
+            statusItem.setScale(0.9);
+            this.statusItems.push(statusItem);
+            this.add(statusItem);
+        } else {
+            console.log(unit.hp);
+            statusItem = this.textItem;
+            statusItem.setText(unit.hp + "/" + unit.maxHp);
+        }
+        var perc = unit.hp / unit.maxHp;
+        if(perc <= 0.5){
+            statusItem.warn();
+        } else if(perc === 0) {
+            statusItem.ko();
+        }
+        return statusItem;
     },
     moveSelectionUp: function () {
         this.menuItems[this.menuItemIndex].deselect();
@@ -319,8 +368,10 @@ var Menu = new Phaser.Class({
     clear: function () {
         for (var i = 0; i < this.menuItems.length; i++) {
             this.menuItems[i].destroy();
+            this.statusItems[i].destroy();
         }
         this.menuItems.length = 0;
+        this.statusItems.length = 0;
         this.menuItemIndex = 0;
     },
     remap: function (units) {
@@ -328,6 +379,7 @@ var Menu = new Phaser.Class({
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             unit.setMenuItem(this.addMenuItem(unit.type));
+            unit.setTextItem(this.addText(unit));
         }
         this.menuItemIndex = 0;
     }
