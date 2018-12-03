@@ -44,17 +44,17 @@ var BattleScene = new Phaser.Class({
     },
     startBattle: function () {
         // player character - warrior
-        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", 100, 20);
+        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", 100, 20, 0.3, 8, 20);
         this.add.existing(warrior);
 
         // player character - mage
-        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", 80, 8);
+        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", 80, 8, 0.1, 2, 5);
         this.add.existing(mage);
 
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 23);
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 23, 0.4, 8, 15);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 35);
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 35, 0.35, 11, 5);
         this.add.existing(dragonOrange);
 
         // array with heroes
@@ -135,6 +135,15 @@ var UIScene = new Phaser.Class({
             Phaser.Scene.call(this, {key: 'UIScene'});
         },
 
+    init: function() {
+        this.battleScene = this.scene.get("BattleScene");
+        // when its player cunit turn to move
+        this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
+        // the message describing the current action
+
+        this.message = new Message(this, this.battleScene.events);
+        this.add.existing(this.message);
+    },
     create: function () {
         // draw some background for the menu
         this.graphics = this.add.graphics();
@@ -161,13 +170,10 @@ var UIScene = new Phaser.Class({
         this.menus.add(this.actionsMenu);
         this.menus.add(this.enemiesMenu);
 
-        this.battleScene = this.scene.get("BattleScene");
+
 
         // listen for keyboard events
         this.input.keyboard.on("keydown", this.onKeyInput, this);
-
-        // when its player cunit turn to move
-        this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
 
         // when the action on the menu is selected
         // for now we have only one action so we dont send and action id
@@ -179,14 +185,9 @@ var UIScene = new Phaser.Class({
         // when the scene receives wake event
         this.sys.events.on('wake', this.createMenu, this);
 
-        // the message describing the current action
-        this.message = new Message(this, this.battleScene.events);
-        this.add.existing(this.message);
-
         this.createMenu();
     }, remapHeroes: function () {
         var heroes = this.battleScene.heroes;
-        console.log(heroes);
         this.heroesMenu.remap(heroes);
 
     },
@@ -197,9 +198,6 @@ var UIScene = new Phaser.Class({
         this.remapEnemies();
         // first move
         this.battleScene.nextTurn();
-    },
-    close: function () {
-        this.scene.launch('NoScene');
     },
     remapEnemies: function () {
         var enemies = this.battleScene.enemies;
@@ -271,10 +269,6 @@ var StatusText = new Phaser.Class({
     warn: function () {
         this.setColor('#f8ff38');
     },
-
-    normal: function () {
-        this.setColor('#ffffff');
-    },
     ko: function () {
         this.setColor('#ff2e22');
     }
@@ -311,12 +305,11 @@ var Menu = new Phaser.Class({
             this.statusItems.push(statusItem);
             this.add(statusItem);
         } else {
-            console.log(unit.hp);
             statusItem = this.textItem;
             statusItem.setText(unit.hp + "/" + unit.maxHp);
         }
         var perc = unit.hp / unit.maxHp;
-        if(perc <= 0.5){
+        if(perc <= 0.5 && perc > 0){
             statusItem.warn();
         } else if(perc === 0) {
             statusItem.ko();
