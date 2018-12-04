@@ -25,6 +25,10 @@ var MainMenu = new Phaser.Class({
         this.items.setColor('#cccf00');
         this.items.setInteractive();
         this.items.on('pointerdown', function () {
+            if(this.scene.index === 0) {
+                console.log('opened ' + this.scene.index);
+                this.scene.scene.switch('ItemsMenu');
+            }
             this.scene.deselectAll();
             this.scene.index = 0;
             this.scene.items.setColor('#cccf00')
@@ -34,6 +38,9 @@ var MainMenu = new Phaser.Class({
         this.equipment.setColor('#000000');
         this.equipment.setInteractive();
         this.equipment.on('pointerdown', function () {
+            if(this.scene.index === 1) {
+                console.log('opened ' + this.scene.index)
+            }
             this.scene.deselectAll();
             this.scene.index = 1;
             this.scene.equipment.setColor('#cccf00')
@@ -44,6 +51,9 @@ var MainMenu = new Phaser.Class({
         this.abilities.setColor('#000000');
         this.abilities.setInteractive();
         this.abilities.on('pointerdown', function () {
+            if(this.scene.index === 2) {
+                console.log('opened ' + this.scene.index)
+            }
             this.scene.deselectAll();
             this.scene.index = 2;
             this.scene.abilities.setColor('#cccf00')
@@ -53,6 +63,9 @@ var MainMenu = new Phaser.Class({
         this.save.setColor('#000000');
         this.save.setInteractive();
         this.save.on('pointerdown', function () {
+            if(this.scene.index === 3) {
+                console.log('opened ' + this.scene.index)
+            }
             this.scene.deselectAll();
             this.scene.index = 3;
             this.scene.save.setColor('#cccf00')
@@ -62,6 +75,9 @@ var MainMenu = new Phaser.Class({
         this.exit.setColor('#000000');
         this.exit.setInteractive();
         this.exit.on('pointerdown', function () {
+            if(this.scene.index === 4) {
+                console.log('opened ' + this.scene.index)
+            }
             this.scene.deselectAll();
             this.scene.index = 4;
             this.scene.exit.setColor('#cccf00')
@@ -90,6 +106,13 @@ var MainMenu = new Phaser.Class({
             this.index++;
         } else if (event.code === 'KeyX') {
             console.log("open " + this.index);
+            switch (this.index) {
+                case 0:
+                    this.scene.switch('ItemsMenu');
+                    break;
+                default:
+                    console.log('error');
+            }
         } else if(event.code === 'Escape') {
             this.scene.stop();
         }

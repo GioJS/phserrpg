@@ -9,10 +9,10 @@ var InitialScene = new Phaser.Class({
         },
     preload: function () {
         team = new Team();
-        this.inventory = new Inventory();
+        inventory = new Inventory();
 
-        this.inventory.addRevives(2);
-        this.inventory.addPotions(10);
+        inventory.addRevives(2);
+        inventory.addPotions(10);
 
         this.load.image('tiles', 'game/assets/map/spritesheet.png');
         this.load.tilemapTiledJSON('map', 'game/assets/map/map.json');
@@ -26,6 +26,7 @@ var InitialScene = new Phaser.Class({
         //level enemies
         this.load.image('dragonblue', 'game/assets/dragonblue.png');
         this.load.image('dragonorrange', 'game/assets/dragonorrange.png');
+
 
     },
     create: function () {
@@ -54,7 +55,7 @@ var InitialScene = new Phaser.Class({
                 //this.input.enabled = false;
                 this.movement.stop();
                 this.scene.launch('MainMenu');
-            } else if(event.code === 'Escape') {
+            } else if (event.code === 'Escape') {
                 this.movement.start();
             }
         }, this);
@@ -105,7 +106,25 @@ var InitialScene = new Phaser.Class({
 
         this.physics.add.collider(this.player, obstacles);
 
+        if (this.game.device.os.android) {
+            this.menuButton = this.add.text(5, 0, "Menu");
+            this.menuButton.setInteractive();
+            this.menuButton.setColor('#ffff21');
+            this.menuButton.setBackgroundColor("#ffffff");
+            this.menuButton.on('pointerdown', function () {
+                if (!this.scene.scene.menuOpen) {
+                    this.scene.movement.stop();
+                    this.scene.scene.menuOpen = true;
+                    this.scene.scene.launch('MainMenu');
+                } else {
+                    this.scene.movement.start();
+                    this.scene.scene.menuOpen = false;
+                    this.scene.scene.get('MainMenu').scene.stop();
+                }
+            });
 
+
+        }
         // where the enemies will be
         this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});
         for (var i = 0; i < 30; i++) {

@@ -19,7 +19,8 @@ var config = {
         InitialScene,
         BattleScene,
         UIScene,
-        MainMenu
+        MainMenu,
+        ItemsMenu
     ]
 };
 var game = new Phaser.Game(config);
