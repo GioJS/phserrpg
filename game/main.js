@@ -1,5 +1,4 @@
 
-
 var config = {
     type: Phaser.AUTO,
     parent: 'content',
@@ -26,4 +25,3 @@ var config = {
     ]
 };
 var game = new Phaser.Game(config);
-
