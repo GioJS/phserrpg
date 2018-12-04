@@ -29,6 +29,7 @@ var InitialScene = new Phaser.Class({
 
     },
     create: function () {
+        this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         var map = this.make.tilemap({key: 'map'});
 
         var tiles = map.addTilesetImage('spritesheet', 'tiles');
@@ -50,6 +51,21 @@ var InitialScene = new Phaser.Class({
 
         this.start = this.time.now;
 
+        this.time.addEvent({
+            repeat: -1, delay: 1000, callbackScope: this, callback: function () {
+                seconds++;
+
+                if (seconds !== 0 && seconds % 60 === 0) {
+                    seconds = 0;
+                    minutes++;
+                }
+
+                if (minutes !== 0 && this.minutes % 60 === 0) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+        });
 
         //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
         this.anims.create({
@@ -83,8 +99,6 @@ var InitialScene = new Phaser.Class({
         this.physics.add.collider(this.player, obstacles);
 
 
-
-
         // where the enemies will be
         this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});
         for (var i = 0; i < 30; i++) {
@@ -101,6 +115,9 @@ var InitialScene = new Phaser.Class({
 
     },
     update: function (time, delta) {
+        if (this.key.isDown) {
+            this.scene.launch('MainMenu');
+        }
         this.player.body.setVelocity(0);
         this.movement.resetMovements();
 
