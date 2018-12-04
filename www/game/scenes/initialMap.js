@@ -8,6 +8,11 @@ var InitialScene = new Phaser.Class({
             Phaser.Scene.call(this, {key: 'InitialMap'});
         },
     preload: function () {
+        this.inventory = new Inventory();
+
+        this.inventory.addRevives(2);
+        this.inventory.addPotions(10);
+
         this.load.image('tiles', 'game/assets/map/spritesheet.png');
         this.load.tilemapTiledJSON('map', 'game/assets/map/map.json');
         this.load.spritesheet('player', 'game/assets/pgsheets.png', {frameWidth: 16, frameHeight: 16});
