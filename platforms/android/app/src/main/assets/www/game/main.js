@@ -18,7 +18,12 @@ var config = {
         PreludeScene,
         InitialScene,
         BattleScene,
-        UIScene
+        UIScene,
+        MainMenu,
+        ItemsMenu,
+        UsePotion,
+        UseRevive
     ]
 };
 var game = new Phaser.Game(config);
+
