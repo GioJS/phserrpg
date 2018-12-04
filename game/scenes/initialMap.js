@@ -136,6 +136,6 @@ var InitialScene = new Phaser.Class({
             },
             onCompleteScope: this
         });
-    },
+    }
 
 });

@@ -1,3 +1,4 @@
+
 var BootScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
