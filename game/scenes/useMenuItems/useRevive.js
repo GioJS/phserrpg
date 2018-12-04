@@ -1,11 +1,11 @@
-var UsePotion = new Phaser.Class({
+var UseRevive = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize:
 
-        function UsePotion() {
-            Phaser.Scene.call(this, {key: 'UsePotion'});
+        function UseRevive() {
+            Phaser.Scene.call(this, {key: 'UseRevive'});
 
         },
 
@@ -23,70 +23,58 @@ var UsePotion = new Phaser.Class({
 
         this.buttons = [];
 
-        this.indices = {potions: null, antitodes: null, megapotions: null, revive: null, back: null};
-        this.currInd = 0;
 
-        if (inventory.getPotions() > 0) {
-            this.potions = this.add.text(205, 25, "Potion x " + inventory.getPotions());
-            this.potions.setColor('#cccf00');
-            this.potions.setInteractive();
-            this.indices.potions = this.currInd++;
-            this.potions.on('pointerdown', function () {
-                this.scene.deselectAll();
-                this.scene.index = this.scene.indices.potions;
-                this.scene.potions.setColor('#cccf00')
-            });
-            this.buttons.push(this.potions);
-        }
+        this.team = team.heroes;
 
-        if (inventory.getAntitodes() > 0) {
-            this.antitodes = this.add.text(205, 5, "Antitode x " + inventory.getAntitodes());
-            this.antitodes.setInteractive();
-            this.antitodes.setColor('#000000');
-            this.indices['antitodes'] = this.currInd++;
-            this.antitodes.on('pointerdown', function () {
-                this.scene.deselectAll();
-                this.scene.index = this.scene.indices.antitodes;
-                this.scene.antitodes.setColor('#cccf00')
-            });
-            this.buttons.push(this.antitodes);
-        }
 
-        if (inventory.getMegapotions() > 0) {
-            this.megapotions = this.add.text(205, 45, "Megapotion x " + inventory.getMegapotions());
-            this.megapotions.setColor('#000000');
-            this.megapotions.setInteractive();
-            this.indices['megapotions'] = this.currInd++;
-            this.megapotions.on('pointerdown', function () {
-                this.scene.deselectAll();
-                this.scene.index = this.scene.indices.megapotions;
-                this.scene.megapotions.setColor('#cccf00')
-            });
-            this.buttons.push(this.megapotions);
-        }
+        this.warrior = this.add.text(205, 5, "Warrior " + this.team[0].hp + "/" + this.team[0].maxHp);
+        this.warrior.setInteractive();
+        this.warrior.setColor('#cccf00');
+        this.warrior.setScale(0.8);
+        this.warrior.on("pointerdown", function () {
+            this.scene.deselectAll();
+            if (this.scene.index === 0) {
+                if(this.scene.team[0].hp > 0)
+                    return;
+                this.scene.team[0].hp = this.scene.team[0].maxHp;
+                inventory.useRevives(1);
+                this.scene.warrior.setText("Warrior " + this.scene.team[0].hp + "/" + this.scene.team[0].maxHp);
+            }
+            this.scene.warrior.setColor('#cccf00');
 
-        if (inventory.getRevives() > 0) {
-            this.revives = this.add.text(205, 65, "Revive x " + inventory.getRevives());
-            this.revives.setColor('#000000');
-            this.revives.setInteractive();
-            this.indices['revives'] = this.currInd++;
-            this.revives.on('pointerdown', function () {
-                this.scene.deselectAll();
-                this.scene.index = this.scene.indices.revives;
-                this.scene.revives.setColor('#cccf00')
-            });
-            this.buttons.push(this.revives);
-        }
+            this.scene.index = 0;
+        });
+        this.buttons.push(this.warrior);
+
+
+        this.mage = this.add.text(205, 25, "Mage " + this.team[1].hp + "/" + this.team[1].maxHp);
+        this.mage.setInteractive();
+        this.mage.setScale(0.8);
+        this.mage.setColor('#000000');
+
+        this.mage.on("pointerdown", function () {
+            this.scene.deselectAll();
+            if(this.scene.index === 1) {
+                if(this.scene.team[1].hp > 0)
+                    return;
+                this.scene.team[1].hp = this.scene.team[1].maxHp;
+                inventory.useRevives(1);
+                this.scene.mage.setText("Mage " + this.scene.team[1].hp + "/" + this.scene.team[1].maxHp);
+
+            }
+            this.scene.mage.setColor('#cccf00');
+            this.scene.index = 1;
+        });
+        this.buttons.push(this.mage);
 
         this.back = this.add.text(205, 85, "Back");
         this.back.setColor('#000000');
         this.back.setInteractive();
-        this.indices['back'] = this.currInd++;
         this.back.on('pointerdown', function () {
             this.scene.deselectAll();
-            if (this.scene.index === this.scene.indices.back)
-                this.scene.scene.switch('MainMenu');
-            this.scene.index = this.scene.indices.back;
+            if (this.scene.index === 3)
+                this.scene.scene.switch('ItemsMenu');
+            this.scene.index = 3;
             this.scene.back.setColor('#cccf00');
         });
         this.buttons.push(this.back);
@@ -102,6 +90,13 @@ var UsePotion = new Phaser.Class({
         this.index = 0;
 
         this.time.addEvent({delay: 1000, callback: this.elapsed, callbackScope: this, repeat: -1});
+
+        this.sys.events.on('wake', function() {
+            this.warrior.setText("Mage " + this.scene.team[0].hp + "/" + this.scene.team[0].maxHp);
+
+            this.mage.setText("Mage " + this.scene.team[1].hp + "/" + this.scene.team[1].maxHp);
+
+        }, this);
     },
     onKeyInput: function (event) {
         this.deselectAll();
@@ -113,15 +108,29 @@ var UsePotion = new Phaser.Class({
         } else if (event.code === 'KeyX') {
             console.log("open " + this.index);
             switch (this.index) {
-                case this.indices.back:
-                    this.scene.switch('MainMenu');
+                case 0:
+                    if(this.team[0].hp > 0)
+                        return;
+                    this.team[0].hp = this.team[0].maxHp;
+                    inventory.useRevives(1);
+                    this.warrior.setText("Warrior " + this.team[0].hp + "/" + this.team[0].maxHp);
+                    break;
+                case 1:
+                    if(this.team[1].hp > 0)
+                        return;
+                    this.team[1].hp = this.team[1].maxHp;
+                    inventory.useRevives(1);
+                    this.mage.setText("Mage " + this.team[1].hp + "/" + this.team[1].maxHp);
+                    break;
+                case 2:
+                    this.scene.switch('ItemsMenu');
                     break;
                 default:
                     console.log('error');
             }
 
         } else if (event.code === 'Escape') {
-            this.scene.switch('MainMenu');
+            this.scene.switch('ItemsMenu');
         }
 
         if (this.index < 0) {

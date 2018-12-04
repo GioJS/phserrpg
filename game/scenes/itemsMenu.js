@@ -23,7 +23,7 @@ var ItemsMenu = new Phaser.Class({
 
         this.buttons = [];
 
-        this.indices = {potions: null, antitodes: null, megapotions: null, revive: null, back: null};
+        this.indices = {potions: null, antitodes: null, megapotions: null, revives: null, back: null};
         this.currInd = 0;
 
         if (inventory.getPotions() > 0) {
@@ -73,6 +73,8 @@ var ItemsMenu = new Phaser.Class({
             this.revives.setInteractive();
             this.indices['revives'] = this.currInd++;
             this.revives.on('pointerdown', function () {
+                if (this.scene.index === this.scene.indices.revives)
+                    this.scene.scene.switch('UseRevive');
                 this.scene.deselectAll();
                 this.scene.index = this.scene.indices.revives;
                 this.scene.revives.setColor('#cccf00')
@@ -135,6 +137,9 @@ var ItemsMenu = new Phaser.Class({
             switch (this.index) {
                 case this.indices.potions:
                     this.scene.switch('UsePotion');
+                    break;
+                case this.indices.revives:
+                    this.scene.switch('UseRevive');
                     break;
                 case this.indices.back:
                     this.scene.switch('MainMenu');

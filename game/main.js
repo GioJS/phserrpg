@@ -21,7 +21,8 @@ var config = {
         UIScene,
         MainMenu,
         ItemsMenu,
-        UsePotion
+        UsePotion,
+        UseRevive
     ]
 };
 var game = new Phaser.Game(config);

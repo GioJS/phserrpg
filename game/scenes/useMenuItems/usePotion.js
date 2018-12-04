@@ -4,7 +4,7 @@ var UsePotion = new Phaser.Class({
 
     initialize:
 
-        function MainMenu() {
+        function UsePotion() {
             Phaser.Scene.call(this, {key: 'UsePotion'});
 
         },
@@ -34,7 +34,7 @@ var UsePotion = new Phaser.Class({
         this.warrior.on("pointerdown", function () {
             this.scene.deselectAll();
             if (this.scene.index === 0) {
-                if(this.scene.team[0].hp === this.scene.team[0].maxHp)
+                if(this.scene.team[0].hp === this.scene.team[0].maxHp || this.scene.team[0].hp === 0)
                     return;
                 if (this.scene.team[0].maxHp - this.scene.team[0].hp <= 100) {
                     this.scene.team[0].hp += this.scene.team[0].maxHp - this.scene.team[0].hp;
@@ -59,7 +59,7 @@ var UsePotion = new Phaser.Class({
         this.mage.on("pointerdown", function () {
             this.scene.deselectAll();
             if(this.scene.index === 1) {
-                if(this.scene.team[1].hp === this.scene.team[1].maxHp)
+                if(this.scene.team[1].hp === this.scene.team[1].maxHp || this.scene.team[1].hp === 0)
                     return;
                 if (this.scene.team[1].maxHp - this.scene.team[1].hp <= 100) {
                     this.scene.team[1].hp += this.scene.team[1].maxHp - this.scene.team[1].hp;
@@ -98,6 +98,13 @@ var UsePotion = new Phaser.Class({
         this.index = 0;
 
         this.time.addEvent({delay: 1000, callback: this.elapsed, callbackScope: this, repeat: -1});
+
+        this.sys.events.on('wake', function() {
+            this.warrior.setText("Mage " + this.scene.team[0].hp + "/" + this.scene.team[0].maxHp);
+
+            this.mage.setText("Mage " + this.scene.team[1].hp + "/" + this.scene.team[1].maxHp);
+
+        }, this);
     },
     onKeyInput: function (event) {
         this.deselectAll();
@@ -109,6 +116,28 @@ var UsePotion = new Phaser.Class({
         } else if (event.code === 'KeyX') {
             console.log("open " + this.index);
             switch (this.index) {
+                case 0:
+                    if(this.team[0].hp === this.team[0].maxHp || this.team[0].hp === 0)
+                        return;
+                    if (this.team[0].maxHp - this.team[0].hp <= 100) {
+                        this.team[0].hp += this.team[0].maxHp - this.team[0].hp;
+                    } else {
+                        this.team[0].hp += 100;
+                    }
+                    inventory.usePotions(1);
+                    this.warrior.setText("Warrior " + this.team[0].hp + "/" + this.team[0].maxHp);
+                    break;
+                case 1:
+                    if(this.team[1].hp === this.team[1].maxHp || this.team[1].hp === 0)
+                        return;
+                    if (this.team[1].maxHp - this.team[1].hp <= 100) {
+                        this.team[1].hp += this.team[1].maxHp - this.team[1].hp;
+                    } else {
+                        this.team[1].hp += 100;
+                    }
+                    inventory.usePotions(1);
+                    this.mage.setText("Mage " + this.team[1].hp + "/" + this.team[1].maxHp);
+                    break;
                 case 2:
                     this.scene.switch('ItemsMenu');
                     break;
