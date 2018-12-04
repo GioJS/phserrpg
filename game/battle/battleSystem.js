@@ -285,6 +285,7 @@ var Menu = new Phaser.Class({
             this.menuItems = [];
             this.statusItems = [];
             this.menuItemIndex = 0;
+            this.stopSelection = false;
             this.heroes = heroes;
             this.x = x;
             this.y = y;
@@ -292,12 +293,17 @@ var Menu = new Phaser.Class({
     addMenuItem: function (unit) {
         var menuItem = new MenuItem(0, this.menuItems.length * 20, unit, this.scene);
         menuItem.setInteractive();
+
         menuItem.on('pointerdown', function (pointer, localX, localY, event) {
+            if(this.stopSelection)
+                return;
             if(this instanceof ActionsMenu)
                 this.scene.events.emit("SelectedAction");
             else if(this instanceof EnemiesMenu)
                 this.scene.events.emit('Enemy', this.menuItemIndex);
+            this.stopSelection = true;
         }, this);
+
         this.menuItems.push(menuItem);
         this.add(menuItem);
         return menuItem;
@@ -346,6 +352,7 @@ var Menu = new Phaser.Class({
         if (!index)
             index = 0;
         this.menuItems[this.menuItemIndex].deselect();
+        this.stopSelection = false;
         this.menuItemIndex = index;
         while (!this.menuItems[this.menuItemIndex].active) {
             this.menuItemIndex++;
