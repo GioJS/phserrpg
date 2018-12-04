@@ -7,6 +7,7 @@ var BattleScene = new Phaser.Class({
         function BattleScene() {
             Phaser.Scene.call(this, {key: 'BattleScene'});
         },
+
     create: function () {
         // change the background to green
         this.cameras.main.setBackgroundColor("rgba(0, 200, 0, 0.5)");
@@ -43,18 +44,25 @@ var BattleScene = new Phaser.Class({
         }
     },
     startBattle: function () {
-        // player character - warrior
-        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", 100, 20, 0.3, 8, 20);
+
+        this.team = team.heroes;
+        //player character - warrior
+        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", this.team[0].hp, this.team[0].damage, this.team[0].critProb, this.team[0].defence, this.team[0].critDamage);
+        warrior.maxHp = this.team[0].maxHp;
         this.add.existing(warrior);
 
         // player character - mage
-        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", 80, 8, 0.1, 2, 5);
+        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", this.team[1].hp, this.team[1].damage, this.team[1].critProb, this.team[1].defence, this.team[1].critDamage);
+
+        mage.maxHp = this.team[1].maxHp;
+
         this.add.existing(mage);
 
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 23, 0.4, 8, 15);
+
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0.4, 8, 15);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 35, 0.35, 11, 5);
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0.35, 11, 5);
         this.add.existing(dragonOrange);
 
         // array with heroes
@@ -81,6 +89,11 @@ var BattleScene = new Phaser.Class({
             if (this.heroes[i].living)
                 gameOver = false;
         }
+        if(victory) {
+            this.team[0].hp = this.heroes[0].hp;
+            this.team[1].hp = this.heroes[1].hp;
+        }
+
         return {victory: victory, gameOver: gameOver};
     },
     nextTurn: function () {

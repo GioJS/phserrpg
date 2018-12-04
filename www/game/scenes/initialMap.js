@@ -8,6 +8,7 @@ var InitialScene = new Phaser.Class({
             Phaser.Scene.call(this, {key: 'InitialMap'});
         },
     preload: function () {
+        team = new Team();
         this.inventory = new Inventory();
 
         this.inventory.addRevives(2);
@@ -29,7 +30,6 @@ var InitialScene = new Phaser.Class({
     },
     create: function () {
         var map = this.make.tilemap({key: 'map'});
-
 
         var tiles = map.addTilesetImage('spritesheet', 'tiles');
 

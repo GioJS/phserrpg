@@ -6,14 +6,18 @@ var Unit = new Phaser.Class({
         function Unit(scene, x, y, texture, frame, type, hp, damage, critProb, defence, critDamage) {
             Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame);
             this.type = type;
-            this.maxHp = this.hp = hp;
+            this.hp = hp;
             this.damage = damage; // default damage
-            this.living = true;
+            this.living = hp>0;
             this.menuItem = null;
             this.textItem = null;
+            this.maxHp = 0;
             this.critProb = critProb;
             this.defence = defence;
             this.critDamage = critDamage;
+
+            if(!this.living)
+                this.angle = 90;
         },
     // we will use this to notify the menu item when the unit is dead
     setMenuItem: function (item) {
@@ -36,7 +40,7 @@ var Unit = new Phaser.Class({
                     var crit = Math.random() >= this.critProb;
                     console.log(target);
                     var damage;
-                    if((this.damage + this.critDamage) <= target.defence)
+                    if ((this.damage + this.critDamage) <= target.defence)
                         damage = 0;
                     else
                         damage = this.damage - target.defence + (crit ? this.critDamage : 0);
@@ -93,3 +97,13 @@ var PlayerCharacter = new Phaser.Class({
             this.setScale(2);
         }
 });
+
+var Team = (function () {
+    function Team() {
+        var warrior = {maxHp: 100, hp: 100, damage: 20, critProb: 0.3, defence: 8, critDamage: 20};
+        var mage = {maxHp: 80, hp: 80, damage: 8, critProb: 0.1, defence: 2, critDamage: 5};
+        this.heroes = [warrior, mage];
+    }
+
+    return Team;
+}());
