@@ -18,7 +18,8 @@ var config = {
         PreludeScene,
         InitialScene,
         BattleScene,
-        UIScene
+        UIScene,
+        MainMenu
     ]
 };
 var game = new Phaser.Game(config);

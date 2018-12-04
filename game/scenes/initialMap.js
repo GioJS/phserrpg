@@ -29,7 +29,6 @@ var InitialScene = new Phaser.Class({
 
     },
     create: function () {
-        this.key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         var map = this.make.tilemap({key: 'map'});
 
         var tiles = map.addTilesetImage('spritesheet', 'tiles');
@@ -50,7 +49,15 @@ var InitialScene = new Phaser.Class({
         this.cameras.main.roundPixels = true;
 
         this.start = this.time.now;
-
+        this.input.keyboard.on('keydown', function (event) {
+            if (event.code === 'Enter') {
+                //this.input.enabled = false;
+                this.movement.stop();
+                this.scene.launch('MainMenu');
+            } else if(event.code === 'Escape') {
+                this.movement.start();
+            }
+        }, this);
         this.time.addEvent({
             repeat: -1, delay: 1000, callbackScope: this, callback: function () {
                 seconds++;
@@ -115,9 +122,6 @@ var InitialScene = new Phaser.Class({
 
     },
     update: function (time, delta) {
-        if (this.key.isDown) {
-            this.scene.launch('MainMenu');
-        }
         this.player.body.setVelocity(0);
         this.movement.resetMovements();
 
