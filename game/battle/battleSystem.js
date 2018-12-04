@@ -218,7 +218,7 @@ var UIScene = new Phaser.Class({
     onEnemy: function (index) {
         this.heroesMenu.deselect();
         this.actionsMenu.deselect();
-        this.enemiesMenu.deselect();
+        this.enemiesMenu.select(index);
         this.currentMenu = null;
         this.battleScene.receivePlayerSelection('attack', index);
     },
