@@ -20,7 +20,8 @@ var config = {
         BattleScene,
         UIScene,
         MainMenu,
-        ItemsMenu
+        ItemsMenu,
+        UsePotion
     ]
 };
 var game = new Phaser.Game(config);

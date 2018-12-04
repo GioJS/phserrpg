@@ -1,11 +1,11 @@
-var ItemsMenu = new Phaser.Class({
+var UsePotion = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize:
 
-        function MainMenu() {
-            Phaser.Scene.call(this, {key: 'ItemsMenu'});
+        function UsePotion() {
+            Phaser.Scene.call(this, {key: 'UsePotion'});
 
         },
 
@@ -32,8 +32,6 @@ var ItemsMenu = new Phaser.Class({
             this.potions.setInteractive();
             this.indices.potions = this.currInd++;
             this.potions.on('pointerdown', function () {
-                if (this.scene.index === this.scene.indices.potions)
-                    this.scene.scene.switch('UsePotion');
                 this.scene.deselectAll();
                 this.scene.index = this.scene.indices.potions;
                 this.scene.potions.setColor('#cccf00')
@@ -104,24 +102,6 @@ var ItemsMenu = new Phaser.Class({
         this.index = 0;
 
         this.time.addEvent({delay: 1000, callback: this.elapsed, callbackScope: this, repeat: -1});
-        this.sys.events.on('wake', function() {
-            if (inventory.getPotions() > 0) {
-                this.potions.setText("Potion x " + inventory.getPotions());
-            }
-
-            if (inventory.getMegapotions() > 0) {
-                this.megapotions.setText("Megapotion x " + inventory.getMegapotions());
-            }
-
-            if (inventory.getRevives() > 0) {
-                this.revives.setText("Revive x " + inventory.getRevives());
-            }
-
-            if (inventory.getAntitodes() > 0) {
-                this.potions.setText("Antitode x " + inventory.getAntitodes());
-            }
-
-        }, this);
     },
     onKeyInput: function (event) {
         this.deselectAll();
@@ -133,9 +113,6 @@ var ItemsMenu = new Phaser.Class({
         } else if (event.code === 'KeyX') {
             console.log("open " + this.index);
             switch (this.index) {
-                case this.indices.potions:
-                    this.scene.switch('UsePotion');
-                    break;
                 case this.indices.back:
                     this.scene.switch('MainMenu');
                     break;
