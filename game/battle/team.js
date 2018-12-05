@@ -8,7 +8,7 @@ var Unit = new Phaser.Class({
             this.type = type;
             this.hp = hp;
             this.damage = damage; // default damage
-            this.living = hp>0;
+            this.living = hp > 0;
             this.menuItem = null;
             this.textItem = null;
             this.maxHp = 0;
@@ -16,7 +16,7 @@ var Unit = new Phaser.Class({
             this.defence = defence;
             this.critDamage = critDamage;
 
-            if(!this.living)
+            if (!this.living)
                 this.angle = 90;
         },
     // we will use this to notify the menu item when the unit is dead
@@ -25,6 +25,22 @@ var Unit = new Phaser.Class({
     },
     setTextItem: function (item) {
         this.textItem = item;
+    },
+    magic: function (name, target) {
+        if (target.living) {
+
+            var crit = Math.random() >= this.critProb;
+            console.log(target);
+            var damage;
+            if ((this.damage + this.critDamage) <= target.defence)
+                damage = 0;
+            else
+                damage = this.damage - target.defence + (crit ? this.critDamage : 0);
+            target.takeDamage(damage);
+            this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " cats " + name + " " + target.type + " for " + damage + " damage");
+
+
+        }
     },
     attack: function (target) {
         if (target.living) {
