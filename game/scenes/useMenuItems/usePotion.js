@@ -114,7 +114,6 @@ var UsePotion = new Phaser.Class({
         } else if (event.code === "KeyZ" && this.index < this.buttons.length) {
             this.index++;
         } else if (event.code === 'KeyX') {
-            console.log("open " + this.index);
             switch (this.index) {
                 case 0:
                     if(this.team[0].hp === this.team[0].maxHp || this.team[0].hp === 0)

@@ -26,7 +26,6 @@ var MainMenu = new Phaser.Class({
         this.items.setInteractive();
         this.items.on('pointerdown', function () {
             if(this.scene.index === 0) {
-                console.log('opened ' + this.scene.index);
                 this.scene.scene.switch('ItemsMenu');
             }
             this.scene.deselectAll();
@@ -100,7 +99,6 @@ var MainMenu = new Phaser.Class({
         this.time.addEvent({delay: 1000, callback: this.elapsed, callbackScope: this, repeat: -1});
     },
     onKeyInput: function (event) {
-        console.log(event)
         this.deselectAll();
 
         if (event.code === "KeyA" && this.index >= 0) {
@@ -108,7 +106,6 @@ var MainMenu = new Phaser.Class({
         } else if (event.code === "KeyZ" && this.index < this.buttons.length) {
             this.index++;
         } else if (event.code === 'KeyX') {
-            console.log("open " + this.index);
             switch (this.index) {
                 case 0:
                     this.scene.switch('ItemsMenu');
