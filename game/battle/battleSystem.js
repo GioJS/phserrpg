@@ -272,7 +272,7 @@ var UIScene = new Phaser.Class({
     onPlayerSelect: function (id) {
         this.heroesMenu.select(id);
         this.actionsMenu.visible = true;
-        if (this.heroesMenu.menuItemIndex === 0) {
+        if (this.heroesMenu.menuItemIndex === 0) { //TODO change
             this.actionsMenu.magics.visible = false;
             this.actionsMenu.limit = 0;
         } else {
