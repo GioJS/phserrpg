@@ -518,16 +518,20 @@ var MagicMenu = new Phaser.Class({
             this.thunder.setInteractive();
 
             this.fire.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic", 0);
+                this.scene.events.emit("SelectedActionMagic");
+                this.menuItemIndex = 0;
             });
 
             this.blizzard.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic", 1);
+                this.scene.events.emit("SelectedActionMagic");
+                this.menuItemIndex = 1;
 
             });
 
             this.thunder.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic", 2);
+                this.scene.events.emit("SelectedActionMagic");
+                this.menuItemIndex = 2;
+
             });
         },
     confirm:
