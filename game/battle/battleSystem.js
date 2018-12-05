@@ -519,29 +519,29 @@ var MagicMenu = new Phaser.Class({
 
             this.fire.on('pointerdown', function () {
                 thisMenu.deselectAll();
-                this.select(0);
+                this.setColor('#f8ff38');
                 this.menuItemIndex = 0;
                 this.scene.events.emit("SelectedActionMagic", 0);
             });
 
             this.blizzard.on('pointerdown', function () {
                 thisMenu.deselectAll();
-                this.select(1);
+                this.setColor('#f8ff38');
                 this.menuItemIndex = 1;
                 this.scene.events.emit("SelectedActionMagic", 1);
             });
 
             this.thunder.on('pointerdown', function () {
                 thisMenu.deselectAll();
-                this.select(2);
+                this.setColor('#f8ff38');
                 this.menuItemIndex = 2;
                 this.scene.events.emit("SelectedActionMagic", 2);
             });
         },
     deselectAll: function () {
-        this.deselect(0);
-        this.deselect(1);
-        this.deselect(2);
+       this.menuItems.forEach(function(item){
+           item.setColor('#ffffff');
+       });
     },
     confirm:
 
