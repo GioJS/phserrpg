@@ -353,6 +353,8 @@ var Menu = new Phaser.Class({
                 return;
             if (this instanceof ActionsMenu)
                 this.scene.events.emit("SelectedAction");
+            else if(this instanceof MagicMenu)
+                this.scene.events.emit("SelectedActionMagic")
             else if (this instanceof EnemiesMenu)
                 this.scene.events.emit('Enemy', index);
             this.stopSelection = true;
