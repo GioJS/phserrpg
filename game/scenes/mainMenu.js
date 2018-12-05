@@ -76,6 +76,9 @@ var MainMenu = new Phaser.Class({
         this.exit.setInteractive();
         this.exit.on('pointerdown', function () {
             if(this.scene.index === 4) {
+                this.scene.scene.stop();
+                this.scene.scene.get('InitialMap').scene.start('BootScene');
+
                 console.log('opened ' + this.scene.index)
             }
             this.scene.deselectAll();
@@ -109,6 +112,10 @@ var MainMenu = new Phaser.Class({
             switch (this.index) {
                 case 0:
                     this.scene.switch('ItemsMenu');
+                    break;
+                case 4:
+                    this.scene.stop();
+                    this.scene.get('InitialMap').scene.start('BootScene');
                     break;
                 default:
                     console.log('error');
