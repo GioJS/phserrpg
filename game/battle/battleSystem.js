@@ -272,6 +272,15 @@ var UIScene = new Phaser.Class({
     onPlayerSelect: function (id) {
         this.heroesMenu.select(id);
         this.actionsMenu.visible = true;
+        if(this.heroesMenu.menuItemIndex === 0) {
+            this.actionsMenu.magics.visible = false;
+            this.actionsMenu.limit = 0;
+        }
+        else {
+            this.actionsMenu.magics.visible = true;
+            this.actionsMenu.limit = null;
+        }
+
         this.magicMenu.visible = false;
         this.actionsMenu.select(0);
         this.currentMenu = this.actionsMenu;
@@ -331,6 +340,7 @@ var Menu = new Phaser.Class({
             this.statusItems = [];
             this.menuItemIndex = 0;
             this.stopSelection = false;
+            this.limit = null;
             this.heroes = heroes;
             this.x = x;
             this.y = y;
@@ -375,6 +385,8 @@ var Menu = new Phaser.Class({
         return statusItem;
     },
     moveSelectionUp: function () {
+        if(this.limit !== null && this.menuItemIndex >= this.limit)
+            return;
         this.menuItems[this.menuItemIndex].deselect();
         do {
             this.menuItemIndex--;
@@ -384,6 +396,8 @@ var Menu = new Phaser.Class({
         this.menuItems[this.menuItemIndex].select();
     },
     moveSelectionDown: function () {
+        if(this.limit !== null && this.menuItemIndex <= this.limit)
+            return;
         this.menuItems[this.menuItemIndex].deselect();
         do {
             this.menuItemIndex++;
@@ -459,7 +473,7 @@ var ActionsMenu = new Phaser.Class({
         function ActionsMenu(x, y, scene) {
             Menu.call(this, x, y, scene);
             this.addMenuItem('Attack');
-            this.addMenuItem('Magic');
+            this.magics = this.addMenuItem('Magic');
 
         },
     confirm:

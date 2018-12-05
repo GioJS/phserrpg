@@ -37,7 +37,7 @@ var Unit = new Phaser.Class({
             else
                 damage = this.damage - target.defence + (crit ? this.critDamage : 0);
             target.takeDamage(damage);
-            this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " cats " + name + " " + target.type + " for " + damage + " damage");
+            this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " casts " + name + " " + target.type + " for " + damage + " damage");
 
 
         }
