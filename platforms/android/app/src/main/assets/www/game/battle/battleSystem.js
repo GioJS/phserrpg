@@ -240,10 +240,32 @@ var UIScene = new Phaser.Class({
     onEnemy: function (index) {
         this.heroesMenu.deselect();
         this.actionsMenu.deselect();
+        var magic = this.magicMenu.menuItemIndex;
         this.magicMenu.deselect();
         this.enemiesMenu.select(index);
-        this.currentMenu = null;
-        this.battleScene.receivePlayerSelection('attack', index);
+        if(this.spell !== undefined) {
+            this.currentMenu = null;
+
+            switch (this.spell) {
+                case 0:
+                    this.battleScene.receivePlayerSelection('Fire', index);
+                    break;
+                case 1:
+                    this.battleScene.receivePlayerSelection('Blizzard', index);
+                    break;
+                case 2:
+                    this.battleScene.receivePlayerSelection('Thunder', index);
+                    break;
+                default:
+                    console.log('error');
+            }
+        } else {
+            this.currentMenu = null;
+
+            this.battleScene.receivePlayerSelection('attack', index);
+        }
+        this.spell = undefined;
+
     },
     onMagic: function (index) {
         this.heroesMenu.deselect();
@@ -362,8 +384,7 @@ var Menu = new Phaser.Class({
                 } else {
                     this.scene.events.emit("SelectedAction");
                 }
-            }
-            else if (this instanceof EnemiesMenu)
+            } else if (this instanceof EnemiesMenu)
                 this.scene.events.emit('Enemy', index);
             this.stopSelection = true;
         }, this);
@@ -492,6 +513,7 @@ var ActionsMenu = new Phaser.Class({
                 this.scene.scene.get('UIScene').currentMenu.visible = false;
                 this.scene.scene.get('UIScene').currentMenu = this.scene.scene.get('UIScene').magicMenu;
                 this.scene.scene.get('UIScene').currentMenu.visible = true;
+                this.scene.scene.get('UIScene').currentMenu.deselectAll();
                 this.scene.scene.get('UIScene').currentMenu.select(0);
             } else
                 this.scene.events.emit("SelectedAction");
@@ -512,24 +534,53 @@ var MagicMenu = new Phaser.Class({
             this.thunder = this.addMenuItem('Thunder');
 
 
-
             this.fire.setInteractive();
             this.blizzard.setInteractive();
             this.thunder.setInteractive();
 
-            this.fire.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic", 0);
+            var thisMenu = this;
+
+            this.fire.on('pointerdown', function () {
+                if(this.stopSelection)
+                    return;
+                thisMenu.deselectAll();
+                this.setColor('#f8ff38');
+                this.menuItemIndex = 0;
+                this.stopSelection = true;
+                this.scene.scene.get('UIScene').spell = 0;
+                this.scene.scene.get('UIScene').currentMenu = this.scene.scene.get('UIScene').enemiesMenu;
+                this.scene.scene.get('UIScene').currentMenu.select(0);
             });
 
-            this.blizzard.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic", 1);
-
+            this.blizzard.on('pointerdown', function () {
+                if(this.stopSelection)
+                    return;
+                thisMenu.deselectAll();
+                this.setColor('#f8ff38');
+                this.menuItemIndex = 1;
+                this.stopSelection = true;
+                this.scene.scene.get('UIScene').currentMenu = this.scene.scene.get('UIScene').enemiesMenu;
+                this.scene.scene.get('UIScene').spell = 1;
+                this.scene.scene.get('UIScene').currentMenu.select(0);
             });
 
-            this.thunder.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic", 2);
+            this.thunder.on('pointerdown', function () {
+                if(this.stopSelection)
+                    return;
+                thisMenu.deselectAll();
+                this.setColor('#f8ff38');
+                this.menuItemIndex = 2;
+                this.stopSelection = true;
+                this.scene.scene.get('UIScene').spell = 2;
+                this.scene.scene.get('UIScene').currentMenu = this.scene.scene.get('UIScene').enemiesMenu;
+                this.scene.scene.get('UIScene').currentMenu.select(0);
             });
         },
+    deselectAll: function () {
+       this.menuItems.forEach(function(item){
+           item.setColor('#ffffff');
+       });
+    },
     confirm:
 
         function () {
