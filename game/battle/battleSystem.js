@@ -89,7 +89,7 @@ var BattleScene = new Phaser.Class({
             if (this.heroes[i].living)
                 gameOver = false;
         }
-        if(victory) {
+        if (victory) {
             this.team[0].hp = this.heroes[0].hp;
             this.team[1].hp = this.heroes[1].hp;
         }
@@ -175,13 +175,15 @@ var UIScene = new Phaser.Class({
         this.heroesMenu = new HeroesMenu(195, 153, this);
         this.actionsMenu = new ActionsMenu(100, 153, this);
         this.enemiesMenu = new EnemiesMenu(8, 153, this);
-
+        this.magicMenu = new MagicMenu(100, 153, this);
+        this.magicMenu.visible = false;
         // the currently selected menu
         this.currentMenu = this.actionsMenu;
         // add menus to the container
         this.menus.add(this.heroesMenu);
         this.menus.add(this.actionsMenu);
         this.menus.add(this.enemiesMenu);
+        this.menus.add(this.magicMenu);
 
 
         // listen for keyboard events
@@ -309,11 +311,11 @@ var Menu = new Phaser.Class({
         menuItem.setInteractive();
 
         menuItem.on('pointerdown', function (pointer, localX, localY, event) {
-            if(this.stopSelection)
+            if (this.stopSelection)
                 return;
-            if(this instanceof ActionsMenu)
+            if (this instanceof ActionsMenu)
                 this.scene.events.emit("SelectedAction");
-            else if(this instanceof EnemiesMenu)
+            else if (this instanceof EnemiesMenu)
                 this.scene.events.emit('Enemy', index);
             this.stopSelection = true;
         }, this);
@@ -421,25 +423,49 @@ var HeroesMenu = new Phaser.Class({
 });
 
 var ActionsMenu = new Phaser.Class({
-        Extends: Menu,
+    Extends: Menu,
 
-        initialize:
+    initialize:
 
-            function ActionsMenu(x, y, scene) {
-                Menu.call(this, x, y, scene);
-                this.addMenuItem('Attack');
+        function ActionsMenu(x, y, scene) {
+            Menu.call(this, x, y, scene);
+            this.addMenuItem('Attack');
+            this.addMenuItem('Magic');
 
+        },
+    confirm:
 
-            },
-        confirm:
-
-            function () {
+        function () {
+            if (this.menuItemIndex === 1){
+                this.scene.scene.get('UIScene').currentMenu.visible = false;
+                this.scene.scene.get('UIScene').currentMenu = this.scene.scene.get('UIScene').magicMenu;
+                this.scene.scene.get('UIScene').currentMenu.visible = true;
+            } else
                 this.scene.events.emit("SelectedAction");
-            }
+        }
 
-    })
-;
+});
 
+
+var MagicMenu = new Phaser.Class({
+    Extends: Menu,
+
+    initialize:
+
+        function MagicMenu(x, y, scene) {
+            Menu.call(this, x, y, scene);
+            this.addMenuItem('Fire');
+            this.addMenuItem('Blizzard');
+            this.addMenuItem('Thunder');
+
+        },
+    confirm:
+
+        function () {
+            this.scene.events.emit("SelectedAction");
+        }
+
+});
 
 var EnemiesMenu = new Phaser.Class({
     Extends: Menu,
