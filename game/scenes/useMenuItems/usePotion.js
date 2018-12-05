@@ -164,8 +164,6 @@ var UsePotion = new Phaser.Class({
         });
     },
     elapsed: function () {
-        var timeStr = hours + " : " + minutes + " : " + seconds;
-
-        this.timer.setText("Time: " + timeStr);
+        getElapsedTime(this.timer);
     }
 });

@@ -139,8 +139,6 @@ var MainMenu = new Phaser.Class({
         this.exit.setColor("#000000");
     },
     elapsed: function () {
-        var timeStr = hours + " : " + minutes + " : " + seconds;
-
-        this.timer.setText("Time: " + timeStr);
+        getElapsedTime(this.timer);
     }
 });
