@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Tue Dec 04 16:42:40 CET 2018
+#Wed Dec 05 13:49:22 CET 2018
 1034.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 881.path=www/node_modules/phaser/src/tilemaps/components/TileToWorldX.js
 508.set=ASSET
@@ -407,6 +407,7 @@
 444.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 40.path=www/node_modules/phaser/src/gameobjects/quad/Quad.js
 1215.baseType=DIRECTORY
+1236.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 655.set=ASSET
 920.baseType=DIRECTORY
 132.path=www/node_modules/phaser/src/renderer/webgl/pipelines/ForwardDiffuseLightPipeline.js
@@ -662,6 +663,7 @@
 474.baseType=DIRECTORY
 444.path=www/node_modules/phaser/src/gameobjects/shape/isobox/IsoBoxRender.js
 78.set=ASSET
+1236.path=www/node_modules/phaser/src/gameobjects/text/static/TextCreator.js
 288.baseType=DIRECTORY
 879.set=ASSET
 865.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
@@ -784,6 +786,7 @@
 435.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 1087.path=www/node_modules/phaser/src/textures/parsers/UnityYAML.js
 329.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
+1236.baseType=DIRECTORY
 1140.path=www/node_modules/phaser/src/geom/ellipse/Ellipse.js
 123.path=www/node_modules/phaser/src/geom/intersects/TriangleToCircle.js
 1111.baseType=DIRECTORY
@@ -840,7 +843,7 @@
 443.path=www/node_modules/eventemitter3/index.js
 68.set=ASSET
 455.baseType=DIRECTORY
-1235.path=www/node_modules/phaser/src/gameobjects/text/static/TextCreator.js
+1235.path=www/node_modules/phaser/src/physics/matter-js/lib/body/Composite.js
 1129.path=www/node_modules/phaser/src/create/palettes/JMP.js
 330.baseType=DIRECTORY
 869.set=ASSET
@@ -1027,7 +1030,7 @@
 442.path=www/node_modules/phaser/src/loader/filetypes/MultiAtlasFile.js
 58.set=ASSET
 19.path=www/node_modules/phaser/src/gameobjects/shape/curve/CurveFactory.js
-1234.path=www/node_modules/phaser/src/physics/matter-js/lib/body/Composite.js
+1234.path=www/node_modules/phaser/src/geom/ellipse/Area.js
 1093.baseType=DIRECTORY
 1128.path=www/node_modules/phaser/src/loader/filetypes/BitmapFontFile.js
 859.set=ASSET
@@ -1215,7 +1218,7 @@
 441.path=www/node_modules/phaser/src/math/easing/quartic/In.js
 48.set=ASSET
 18.path=www/node_modules/phaser/src/gameobjects/particles/Particle.js
-1233.path=www/node_modules/phaser/src/geom/ellipse/Area.js
+1233.path=www/node_modules/phaser/src/sound/html5/HTML5AudioSoundManager.js
 1127.path=www/node_modules/phaser/src/geom/circle/Circumference.js
 849.set=ASSET
 862.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
@@ -1250,7 +1253,7 @@
 543.path=www/node_modules/phaser/src/physics/impact/components/Velocity.js
 1083.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 545.baseType=DIRECTORY
-1229.path=www/node_modules/phaser/src/input/gamepad/configs/Sony_PlayStation_DualShock_4.js
+1229.path=www/node_modules/phaser/src/gameobjects/lights/Light.js
 420.baseType=DIRECTORY
 526.set=ASSET
 964.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
@@ -1408,7 +1411,7 @@
 1179.path=www/package.json
 38.set=ASSET
 17.path=www/node_modules/phaser/src/tilemaps/parsers/impact/ParseTileLayers.js
-1232.path=www/node_modules/phaser/src/sound/html5/HTML5AudioSoundManager.js
+1232.path=www/node_modules/phaser/src/physics/arcade/components/Acceleration.js
 386.baseType=DIRECTORY
 1126.path=www/node_modules/phaser/src/gameobjects/components/Flip.js
 839.set=ASSET
@@ -1445,7 +1448,7 @@
 712.baseType=DIRECTORY
 542.path=www/node_modules/phaser/src/physics/matter-js/lib/constraint/MouseConstraint.js
 1082.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
-1228.path=www/node_modules/phaser/src/gameobjects/lights/Light.js
+1228.path=www/node_modules/phaser/src/scene/const.js
 1183.baseType=DIRECTORY
 516.set=ASSET
 963.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
@@ -1602,7 +1605,7 @@
 1178.path=www/node_modules/phaser/src/utils/object/Merge.js
 28.set=ASSET
 553.baseType=DIRECTORY
-1231.path=www/node_modules/phaser/src/physics/arcade/components/Acceleration.js
+1231.path=www/node_modules/phaser/src/display/canvas/CanvasPool.js
 1125.path=www/node_modules/phaser/src/textures/Texture.js
 829.set=ASSET
 367.baseType=DIRECTORY
@@ -1634,7 +1637,7 @@
 541.path=www/node_modules/phaser/src/input/CreatePixelPerfectHandler.js
 1081.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 42.baseType=DIRECTORY
-1227.path=www/node_modules/phaser/src/scene/const.js
+1227.path=www/node_modules/phaser/src/geom/triangle/BuildFromPolygon.js
 506.set=ASSET
 962.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 1.path=www/node_modules/phaser/src/actions/SetVisible.js
@@ -1759,7 +1762,7 @@
 22.path=www/node_modules/phaser/src/math/random-data-generator/RandomDataGenerator.js
 947.set=ASSET
 1218.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
-count=1236
+count=1237
 475.set=ASSET
 114.path=www/node_modules/phaser/src/physics/matter-js/lib/render/Render.js
 1132.baseType=DIRECTORY
@@ -1783,7 +1786,7 @@ count=1236
 1177.path=www/node_modules/phaser/src/math/interpolation/CubicBezierInterpolation.js
 18.set=ASSET
 419.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
-1230.path=www/node_modules/phaser/src/display/canvas/CanvasPool.js
+1230.path=www/node_modules/phaser/src/input/gamepad/configs/Sony_PlayStation_DualShock_4.js
 1191.baseType=DIRECTORY
 534.baseType=DIRECTORY
 1124.path=www/node_modules/phaser/src/math/easing/EaseMap.js
@@ -1822,7 +1825,7 @@ count=1236
 540.path=www/node_modules/phaser/src/dom/RequestAnimationFrame.js
 434.path=www/node_modules/phaser/src/renderer/webgl/shaders/DeferredDiffuse-vert.js
 476.baseType=DIRECTORY
-1226.path=www/node_modules/phaser/src/geom/triangle/BuildFromPolygon.js
+1226.path=www/node_modules/phaser/src/math/easing/quartic/index.js
 961.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 209.path=www/node_modules/phaser/src/gameobjects/sprite/SpriteWebGLRenderer.js
 0.path=www/game/dialogs/dialogSystem.js
@@ -2005,7 +2008,7 @@ count=1236
 1187.set=ASSET
 433.path=www/node_modules/phaser/src/geom/ellipse/ContainsPoint.js
 643.baseType=DIRECTORY
-1225.path=www/node_modules/phaser/src/math/easing/quartic/index.js
+1225.path=www/node_modules/phaser/src/display/canvas/UserSelect.js
 457.baseType=DIRECTORY
 960.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 208.path=www/node_modules/phaser/src/gameobjects/shape/polygon/Polygon.js
@@ -2202,7 +2205,7 @@ count=1236
 519.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 432.path=www/node_modules/phaser/src/display/bounds/SetCenterX.js
 624.baseType=DIRECTORY
-1224.path=www/node_modules/phaser/src/display/canvas/UserSelect.js
+1224.path=www/node_modules/phaser/src/display/bounds/CenterOn.js
 207.path=www/node_modules/phaser/src/display/align/to/BottomLeft.js
 1095.baseType=DIRECTORY
 594.path=www/node_modules/phaser/src/display/color/Interpolate.js
@@ -2392,7 +2395,7 @@ count=1236
 518.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 431.path=www/node_modules/phaser/src/gameobjects/components/Visible.js
 79.baseType=DIRECTORY
-1223.path=www/node_modules/phaser/src/display/bounds/CenterOn.js
+1223.path=www/game/utils.js
 799.base=C\:\\Users\\Exprivia\\hellph\\platforms\\android\\app\\build\\intermediates\\assets\\debug
 206.path=www/node_modules/phaser/src/math/angle/Wrap.js
 593.path=www/node_modules/phaser/src/geom/line/index.js
@@ -2629,6 +2632,7 @@ count=1236
 781.set=ASSET
 1068.baseType=DIRECTORY
 898.baseType=DIRECTORY
+1236.set=ASSET
 773.baseType=DIRECTORY
 17.set=ASSET
 525.path=www/node_modules/phaser/src/curves/SplineCurve.js

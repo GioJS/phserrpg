@@ -47,22 +47,22 @@ var BattleScene = new Phaser.Class({
 
         this.team = team.heroes;
         //player character - warrior
-        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", this.team[0].hp, this.team[0].damage, this.team[0].critProb, this.team[0].defence, this.team[0].critDamage);
+        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", this.team[0].hp, this.team[0].damage, this.team[0].magicDamage, this.team[0].magicDefence, this.team[0].critProb, this.team[0].defence, this.team[0].critDamage);
         warrior.maxHp = this.team[0].maxHp;
         this.add.existing(warrior);
 
         // player character - mage
-        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", this.team[1].hp, this.team[1].damage, this.team[1].critProb, this.team[1].defence, this.team[1].critDamage);
+        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", this.team[1].hp, this.team[1].damage, this.team[1].magicDamage, this.team[1].magicDefence, this.team[1].critProb, this.team[1].defence, this.team[1].critDamage);
 
         mage.maxHp = this.team[1].maxHp;
 
         this.add.existing(mage);
 
 
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0.4, 8, 15);
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0, 5, 0.4, 8, 15);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0.35, 11, 5);
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0, 2, 0.35, 11, 5);
         this.add.existing(dragonOrange);
 
         // array with heroes
@@ -89,7 +89,7 @@ var BattleScene = new Phaser.Class({
             if (this.heroes[i].living)
                 gameOver = false;
         }
-        if(victory) {
+        if (victory) {
             this.team[0].hp = this.heroes[0].hp;
             this.team[1].hp = this.heroes[1].hp;
         }
@@ -133,6 +133,12 @@ var BattleScene = new Phaser.Class({
     receivePlayerSelection: function (action, target) {
         if (action === 'attack') {
             this.units[this.index].attack(this.enemies[target]);
+        } else if (action === 'Fire') {
+            this.units[this.index].magic('fire', this.enemies[target]);
+        } else if (action === 'Blizzard') {
+            this.units[this.index].magic('blizzard', this.enemies[target]);
+        } else if (action === 'Thunder') {
+            this.units[this.index].magic('thunder', this.enemies[target]);
         }
         this.time.addEvent({delay: 3000, callback: this.nextTurn, callbackScope: this});
     }
@@ -175,13 +181,15 @@ var UIScene = new Phaser.Class({
         this.heroesMenu = new HeroesMenu(195, 153, this);
         this.actionsMenu = new ActionsMenu(100, 153, this);
         this.enemiesMenu = new EnemiesMenu(8, 153, this);
-
+        this.magicMenu = new MagicMenu(100, 153, this);
+        this.magicMenu.visible = false;
         // the currently selected menu
         this.currentMenu = this.actionsMenu;
         // add menus to the container
         this.menus.add(this.heroesMenu);
         this.menus.add(this.actionsMenu);
         this.menus.add(this.enemiesMenu);
+        this.menus.add(this.magicMenu);
 
 
         // listen for keyboard events
@@ -190,6 +198,7 @@ var UIScene = new Phaser.Class({
         // when the action on the menu is selected
         // for now we have only one action so we dont send and action id
         this.events.on("SelectedAction", this.onSelectedAction, this);
+        this.events.on("SelectedActionMagic", this.onMagic, this);
 
         // an enemy is selected
         this.events.on("Enemy", this.onEnemy, this);
@@ -231,9 +240,30 @@ var UIScene = new Phaser.Class({
     onEnemy: function (index) {
         this.heroesMenu.deselect();
         this.actionsMenu.deselect();
+        this.magicMenu.deselect();
         this.enemiesMenu.select(index);
         this.currentMenu = null;
         this.battleScene.receivePlayerSelection('attack', index);
+    },
+    onMagic: function (index) {
+        this.heroesMenu.deselect();
+        this.actionsMenu.deselect();
+        var magic = this.magicMenu.menuItemIndex;
+        this.magicMenu.deselect();
+        this.enemiesMenu.select(index);
+        this.currentMenu = null;
+        switch (magic) {
+            case 0:
+                this.battleScene.receivePlayerSelection('Fire', index);
+                break;
+            case 1:
+                this.battleScene.receivePlayerSelection('Blizzard', index);
+            case 2:
+                this.battleScene.receivePlayerSelection('Thunder', index);
+                break;
+            default:
+                console.log('error');
+        }
     },
     onSelectedAction: function () {
         this.currentMenu = this.enemiesMenu;
@@ -241,7 +271,16 @@ var UIScene = new Phaser.Class({
     },
     onPlayerSelect: function (id) {
         this.heroesMenu.select(id);
-        console.log(this.heroesMenu);
+        this.actionsMenu.visible = true;
+        if (this.heroesMenu.menuItemIndex === 0) { //TODO change
+            this.actionsMenu.magics.visible = false;
+            this.actionsMenu.limit = 0;
+        } else {
+            this.actionsMenu.magics.visible = true;
+            this.actionsMenu.limit = null;
+        }
+
+        this.magicMenu.visible = false;
         this.actionsMenu.select(0);
         this.currentMenu = this.actionsMenu;
     }
@@ -300,6 +339,7 @@ var Menu = new Phaser.Class({
             this.statusItems = [];
             this.menuItemIndex = 0;
             this.stopSelection = false;
+            this.limit = null;
             this.heroes = heroes;
             this.x = x;
             this.y = y;
@@ -309,11 +349,11 @@ var Menu = new Phaser.Class({
         menuItem.setInteractive();
 
         menuItem.on('pointerdown', function (pointer, localX, localY, event) {
-            if(this.stopSelection)
+            if (this.stopSelection)
                 return;
-            if(this instanceof ActionsMenu)
+            if (this instanceof ActionsMenu)
                 this.scene.events.emit("SelectedAction");
-            else if(this instanceof EnemiesMenu)
+            else if (this instanceof EnemiesMenu)
                 this.scene.events.emit('Enemy', index);
             this.stopSelection = true;
         }, this);
@@ -344,6 +384,8 @@ var Menu = new Phaser.Class({
         return statusItem;
     },
     moveSelectionUp: function () {
+        if (this.limit !== null && this.menuItemIndex >= this.limit)
+            return;
         this.menuItems[this.menuItemIndex].deselect();
         do {
             this.menuItemIndex--;
@@ -353,6 +395,8 @@ var Menu = new Phaser.Class({
         this.menuItems[this.menuItemIndex].select();
     },
     moveSelectionDown: function () {
+        if (this.limit !== null && this.menuItemIndex <= this.limit)
+            return;
         this.menuItems[this.menuItemIndex].deselect();
         do {
             this.menuItemIndex++;
@@ -421,25 +465,50 @@ var HeroesMenu = new Phaser.Class({
 });
 
 var ActionsMenu = new Phaser.Class({
-        Extends: Menu,
+    Extends: Menu,
 
-        initialize:
+    initialize:
 
-            function ActionsMenu(x, y, scene) {
-                Menu.call(this, x, y, scene);
-                this.addMenuItem('Attack');
+        function ActionsMenu(x, y, scene) {
+            Menu.call(this, x, y, scene);
+            this.addMenuItem('Attack');
+            this.magics = this.addMenuItem('Magic');
 
+        },
+    confirm:
 
-            },
-        confirm:
-
-            function () {
+        function () {
+            if (this.menuItemIndex === 1) {
+                this.scene.scene.get('UIScene').currentMenu.visible = false;
+                this.scene.scene.get('UIScene').currentMenu = this.scene.scene.get('UIScene').magicMenu;
+                this.scene.scene.get('UIScene').currentMenu.visible = true;
+                this.scene.scene.get('UIScene').currentMenu.select(0);
+            } else
                 this.scene.events.emit("SelectedAction");
-            }
+        }
 
-    })
-;
+});
 
+
+var MagicMenu = new Phaser.Class({
+    Extends: Menu,
+
+    initialize:
+
+        function MagicMenu(x, y, scene) {
+            Menu.call(this, x, y, scene);
+            this.addMenuItem('Fire');
+            this.addMenuItem('Blizzard');
+            this.addMenuItem('Thunder');
+
+        },
+    confirm:
+
+        function () {
+            this.scene.events.emit("SelectedActionMagic", this.menuItemIndex);
+        }
+
+});
 
 var EnemiesMenu = new Phaser.Class({
     Extends: Menu,

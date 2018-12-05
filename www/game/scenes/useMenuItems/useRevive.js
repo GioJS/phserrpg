@@ -34,7 +34,7 @@ var UseRevive = new Phaser.Class({
         this.warrior.on("pointerdown", function () {
             this.scene.deselectAll();
             if (this.scene.index === 0) {
-                if(this.scene.team[0].hp > 0)
+                if (this.scene.team[0].hp > 0)
                     return;
                 this.scene.team[0].hp = this.scene.team[0].maxHp;
                 inventory.useRevives(1);
@@ -54,8 +54,8 @@ var UseRevive = new Phaser.Class({
 
         this.mage.on("pointerdown", function () {
             this.scene.deselectAll();
-            if(this.scene.index === 1) {
-                if(this.scene.team[1].hp > 0)
+            if (this.scene.index === 1) {
+                if (this.scene.team[1].hp > 0)
                     return;
                 this.scene.team[1].hp = this.scene.team[1].maxHp;
                 inventory.useRevives(1);
@@ -91,7 +91,7 @@ var UseRevive = new Phaser.Class({
 
         this.time.addEvent({delay: 1000, callback: this.elapsed, callbackScope: this, repeat: -1});
 
-        this.sys.events.on('wake', function() {
+        this.sys.events.on('wake', function () {
             this.warrior.setText("Mage " + this.scene.team[0].hp + "/" + this.scene.team[0].maxHp);
 
             this.mage.setText("Mage " + this.scene.team[1].hp + "/" + this.scene.team[1].maxHp);
@@ -106,17 +106,16 @@ var UseRevive = new Phaser.Class({
         } else if (event.code === "KeyZ" && this.index < this.buttons.length) {
             this.index++;
         } else if (event.code === 'KeyX') {
-            console.log("open " + this.index);
             switch (this.index) {
                 case 0:
-                    if(this.team[0].hp > 0)
+                    if (this.team[0].hp > 0)
                         return;
                     this.team[0].hp = this.team[0].maxHp;
                     inventory.useRevives(1);
                     this.warrior.setText("Warrior " + this.team[0].hp + "/" + this.team[0].maxHp);
                     break;
                 case 1:
-                    if(this.team[1].hp > 0)
+                    if (this.team[1].hp > 0)
                         return;
                     this.team[1].hp = this.team[1].maxHp;
                     inventory.useRevives(1);
@@ -149,8 +148,6 @@ var UseRevive = new Phaser.Class({
         });
     },
     elapsed: function () {
-        var timeStr = hours + " : " + minutes + " : " + seconds;
-
-        this.timer.setText("Time: " + timeStr);
+        getElapsedTime(this.timer);
     }
 });

@@ -106,7 +106,7 @@ var InitialScene = new Phaser.Class({
 
         this.physics.add.collider(this.player, obstacles);
 
-        if (this.game.device.os.android) {
+        //if (this.game.device.os.android) {
             this.menuButton = this.add.text(5, 0, "Menu");
             this.menuButton.setInteractive();
             this.menuButton.setColor('#ffff21');
@@ -124,7 +124,7 @@ var InitialScene = new Phaser.Class({
             });
 
 
-        }
+        //}
         // where the enemies will be
         this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});
         for (var i = 0; i < 30; i++) {

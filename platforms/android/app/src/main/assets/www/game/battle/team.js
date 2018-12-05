@@ -3,20 +3,22 @@ var Unit = new Phaser.Class({
 
     initialize:
 
-        function Unit(scene, x, y, texture, frame, type, hp, damage, critProb, defence, critDamage) {
+        function Unit(scene, x, y, texture, frame, type, hp, damage, magicDamage, magicDefence, critProb, defence, critDamage) {
             Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame);
             this.type = type;
             this.hp = hp;
             this.damage = damage; // default damage
-            this.living = hp>0;
+            this.living = hp > 0;
             this.menuItem = null;
             this.textItem = null;
             this.maxHp = 0;
             this.critProb = critProb;
             this.defence = defence;
+            this.magicDefence = magicDefence;
+            this.magicDamage = magicDamage;
             this.critDamage = critDamage;
 
-            if(!this.living)
+            if (!this.living)
                 this.angle = 90;
         },
     // we will use this to notify the menu item when the unit is dead
@@ -25,6 +27,22 @@ var Unit = new Phaser.Class({
     },
     setTextItem: function (item) {
         this.textItem = item;
+    },
+    magic: function (name, target) {
+        if (target.living) {
+
+            var crit = Math.random() >= this.critProb;
+            console.log(target);
+            var damage;
+            if ((this.magicDamage + this.critDamage) <= target.magicDefence)
+                damage = 0;
+            else
+                damage = this.magicDamage - target.magicDefence + (crit ? this.critDamage : 0);
+            target.takeDamage(damage);
+            this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " casts " + name + " " + target.type + " for " + damage + " damage");
+
+
+        }
     },
     attack: function (target) {
         if (target.living) {
@@ -89,8 +107,8 @@ var PlayerCharacter = new Phaser.Class({
     Extends: Unit,
 
     initialize:
-        function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage, critProb, defence, critDamage) {
-            Unit.call(this, scene, x, y, texture, frame, type, hp, damage, critProb, defence, critDamage);
+        function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage, magicDamage, magicDefence, critProb, defence, critDamage) {
+            Unit.call(this, scene, x, y, texture, frame, type, hp, damage, magicDamage, magicDefence, critProb, defence, critDamage);
             // flip the image so I don't have to edit it manually
             this.flipX = true;
 
@@ -100,8 +118,26 @@ var PlayerCharacter = new Phaser.Class({
 
 var Team = (function () {
     function Team() {
-        var warrior = {maxHp: 100, hp: 100, damage: 20, critProb: 0.3, defence: 8, critDamage: 20};
-        var mage = {maxHp: 80, hp: 80, damage: 8, critProb: 0.1, defence: 2, critDamage: 5};
+        var warrior = {
+            maxHp: 100,
+            hp: 100,
+            damage: 20,
+            magicDamage: 0,
+            magicDefence: 2,
+            critProb: 0.3,
+            defence: 8,
+            critDamage: 20
+        };
+        var mage = {
+            maxHp: 80,
+            hp: 80,
+            damage: 8,
+            magicDamage: 120,
+            magicDefence: 20,
+            critProb: 0.1,
+            defence: 2,
+            critDamage: 5
+        };
         this.heroes = [warrior, mage];
     }
 

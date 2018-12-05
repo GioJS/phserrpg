@@ -133,7 +133,6 @@ var ItemsMenu = new Phaser.Class({
         } else if (event.code === "KeyZ" && this.index < this.buttons.length) {
             this.index++;
         } else if (event.code === 'KeyX') {
-            console.log("open " + this.index);
             switch (this.index) {
                 case this.indices.potions:
                     this.scene.switch('UsePotion');
@@ -168,8 +167,6 @@ var ItemsMenu = new Phaser.Class({
         });
     },
     elapsed: function () {
-        var timeStr = hours + " : " + minutes + " : " + seconds;
-
-        this.timer.setText("Time: " + timeStr);
+        getElapsedTime(this.timer);
     }
 });
