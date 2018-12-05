@@ -362,8 +362,7 @@ var Menu = new Phaser.Class({
                 } else {
                     this.scene.events.emit("SelectedAction");
                 }
-            }
-            else if (this instanceof EnemiesMenu)
+            } else if (this instanceof EnemiesMenu)
                 this.scene.events.emit('Enemy', index);
             this.stopSelection = true;
         }, this);
@@ -512,28 +511,38 @@ var MagicMenu = new Phaser.Class({
             this.thunder = this.addMenuItem('Thunder');
 
 
-
             this.fire.setInteractive();
             this.blizzard.setInteractive();
             this.thunder.setInteractive();
 
-            this.fire.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic");
+            var thisMenu = this;
+
+            this.fire.on('pointerdown', function () {
+                thisMenu.deselectAll();
+                this.select(0);
                 this.menuItemIndex = 0;
+                this.scene.events.emit("SelectedActionMagic", 0);
             });
 
-            this.blizzard.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic");
+            this.blizzard.on('pointerdown', function () {
+                thisMenu.deselectAll();
+                this.select(1);
                 this.menuItemIndex = 1;
-
+                this.scene.events.emit("SelectedActionMagic", 1);
             });
 
-            this.thunder.on('pointerdown', function(){
-                this.scene.events.emit("SelectedActionMagic");
+            this.thunder.on('pointerdown', function () {
+                thisMenu.deselectAll();
+                this.select(2);
                 this.menuItemIndex = 2;
-
+                this.scene.events.emit("SelectedActionMagic", 2);
             });
         },
+    deselectAll: function () {
+        this.deselect(0);
+        this.deselect(1);
+        this.deselect(2);
+    },
     confirm:
 
         function () {
