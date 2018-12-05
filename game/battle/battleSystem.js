@@ -7,7 +7,9 @@ var BattleScene = new Phaser.Class({
         function BattleScene() {
             Phaser.Scene.call(this, {key: 'BattleScene'});
         },
-
+    preload: function () {
+        this.load.atlas('flares', 'game/assets/flares.png', 'game/assets/flares.json');
+    },
     create: function () {
         // change the background to green
         this.cameras.main.setBackgroundColor("rgba(0, 200, 0, 0.5)");
@@ -243,7 +245,7 @@ var UIScene = new Phaser.Class({
         var magic = this.magicMenu.menuItemIndex;
         this.magicMenu.deselect();
         this.enemiesMenu.select(index);
-        if(this.spell !== undefined) {
+        if (this.spell !== undefined) {
             this.currentMenu = null;
 
             switch (this.spell) {
@@ -541,7 +543,7 @@ var MagicMenu = new Phaser.Class({
             var thisMenu = this;
 
             this.fire.on('pointerdown', function () {
-                if(this.stopSelection)
+                if (this.stopSelection)
                     return;
                 thisMenu.deselectAll();
                 this.setColor('#f8ff38');
@@ -553,7 +555,7 @@ var MagicMenu = new Phaser.Class({
             });
 
             this.blizzard.on('pointerdown', function () {
-                if(this.stopSelection)
+                if (this.stopSelection)
                     return;
                 thisMenu.deselectAll();
                 this.setColor('#f8ff38');
@@ -565,7 +567,7 @@ var MagicMenu = new Phaser.Class({
             });
 
             this.thunder.on('pointerdown', function () {
-                if(this.stopSelection)
+                if (this.stopSelection)
                     return;
                 thisMenu.deselectAll();
                 this.setColor('#f8ff38');
@@ -577,9 +579,9 @@ var MagicMenu = new Phaser.Class({
             });
         },
     deselectAll: function () {
-       this.menuItems.forEach(function(item){
-           item.setColor('#ffffff');
-       });
+        this.menuItems.forEach(function (item) {
+            item.setColor('#ffffff');
+        });
     },
     confirm:
 

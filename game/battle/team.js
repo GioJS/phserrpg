@@ -30,17 +30,43 @@ var Unit = new Phaser.Class({
     },
     magic: function (name, target) {
         if (target.living) {
+            if(name === 'blizzard') {
+                var particles = this.scene.add.particles('flares');
+                particles.createEmitter({
+                    frame: 'blue',
+                    x: 50,
+                    y: 50,
+                    speed: 200,
+                    scale: { start: 0.4, end: 0 },
+                    lifespan: 100,
+                    blendMode: 'ADD'
+                });
 
-            var crit = Math.random() >= this.critProb;
-            console.log(target);
-            var damage;
-            if ((this.magicDamage + this.critDamage) <= target.magicDefence)
-                damage = 0;
-            else
-                damage = this.magicDamage - target.magicDefence + (crit ? this.critDamage : 0);
-            target.takeDamage(damage);
-            this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " casts " + name + " " + target.type + " for " + damage + " damage");
+                this.scene.time.delayedCall(1000, function() {
+                    particles.destroy();
+                    var crit = Math.random() >= this.critProb;
+                    console.log(target);
+                    var damage;
+                    if ((this.magicDamage + this.critDamage) <= target.magicDefence)
+                        damage = 0;
+                    else
+                        damage = this.magicDamage - target.magicDefence + (crit ? this.critDamage : 0);
+                    target.takeDamage(damage);
+                    this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " casts " + name + " " + target.type + " for " + damage + " damage");
 
+                }, [], this);
+
+            } else {
+                var crit = Math.random() >= this.critProb;
+                console.log(target);
+                var damage;
+                if ((this.magicDamage + this.critDamage) <= target.magicDefence)
+                    damage = 0;
+                else
+                    damage = this.magicDamage - target.magicDefence + (crit ? this.critDamage : 0);
+                target.takeDamage(damage);
+                this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " casts " + name + " " + target.type + " for " + damage + " damage");
+            }
 
         }
     },
