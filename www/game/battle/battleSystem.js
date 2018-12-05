@@ -258,6 +258,7 @@ var UIScene = new Phaser.Class({
                 break;
             case 1:
                 this.battleScene.receivePlayerSelection('Blizzard', index);
+                break;
             case 2:
                 this.battleScene.receivePlayerSelection('Thunder', index);
                 break;

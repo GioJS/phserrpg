@@ -351,10 +351,17 @@ var Menu = new Phaser.Class({
         menuItem.on('pointerdown', function (pointer, localX, localY, event) {
             if (this.stopSelection)
                 return;
-            if (this instanceof ActionsMenu)
-                this.scene.events.emit("SelectedAction");
-            else if(this instanceof MagicMenu)
-                this.scene.events.emit("SelectedActionMagic")
+            if (this instanceof ActionsMenu) {
+                //this.scene.events.emit("SelectedAction");
+                if (menuItem.text === "Magic") {
+                    this.scene.scene.get('UIScene').currentMenu.visible = false;
+                    this.scene.scene.get('UIScene').currentMenu = this.scene.scene.get('UIScene').magicMenu;
+                    this.scene.scene.get('UIScene').currentMenu.visible = true;
+                    this.scene.scene.get('UIScene').currentMenu.select(0);
+                } else {
+                    this.scene.events.emit("SelectedAction");
+                }
+            }
             else if (this instanceof EnemiesMenu)
                 this.scene.events.emit('Enemy', index);
             this.stopSelection = true;
@@ -499,10 +506,28 @@ var MagicMenu = new Phaser.Class({
 
         function MagicMenu(x, y, scene) {
             Menu.call(this, x, y, scene);
-            this.addMenuItem('Fire');
-            this.addMenuItem('Blizzard');
-            this.addMenuItem('Thunder');
+            this.fire = this.addMenuItem('Fire');
+            this.blizzard = this.addMenuItem('Blizzard');
+            this.thunder = this.addMenuItem('Thunder');
 
+
+
+            this.fire.setInteractive();
+            this.blizzard.setInteractive();
+            this.thunder.setInteractive();
+
+            this.fire.on('pointerdown', function(){
+                this.scene.events.emit("SelectedActionMagic", 0);
+            });
+
+            this.blizzard.on('pointerdown', function(){
+                this.scene.events.emit("SelectedActionMagic", 1);
+
+            });
+
+            this.thunder.on('pointerdown', function(){
+                this.scene.events.emit("SelectedActionMagic", 2);
+            });
         },
     confirm:
 
