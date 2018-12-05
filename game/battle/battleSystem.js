@@ -47,22 +47,22 @@ var BattleScene = new Phaser.Class({
 
         this.team = team.heroes;
         //player character - warrior
-        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", this.team[0].hp, this.team[0].damage, this.team[0].critProb, this.team[0].defence, this.team[0].critDamage);
+        var warrior = new PlayerCharacter(this, 250, 50, "player", 1, "Warrior", this.team[0].hp, this.team[0].damage, this.team[0].magicDamage, this.team[0].magicDefence, this.team[0].critProb, this.team[0].defence, this.team[0].critDamage);
         warrior.maxHp = this.team[0].maxHp;
         this.add.existing(warrior);
 
         // player character - mage
-        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", this.team[1].hp, this.team[1].damage, this.team[1].critProb, this.team[1].defence, this.team[1].critDamage);
+        var mage = new PlayerCharacter(this, 250, 100, "player", 4, "Mage", this.team[1].hp, this.team[1].damage, this.team[1].magicDamage, this.team[1].magicDefence, this.team[1].critProb, this.team[1].defence, this.team[1].critDamage);
 
         mage.maxHp = this.team[1].maxHp;
 
         this.add.existing(mage);
 
 
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0.4, 8, 15);
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0, 5, 0.4, 8, 15);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0.35, 11, 5);
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0, 2, 0.35, 11, 5);
         this.add.existing(dragonOrange);
 
         // array with heroes
@@ -272,11 +272,10 @@ var UIScene = new Phaser.Class({
     onPlayerSelect: function (id) {
         this.heroesMenu.select(id);
         this.actionsMenu.visible = true;
-        if(this.heroesMenu.menuItemIndex === 0) {
+        if (this.heroesMenu.menuItemIndex === 0) {
             this.actionsMenu.magics.visible = false;
             this.actionsMenu.limit = 0;
-        }
-        else {
+        } else {
             this.actionsMenu.magics.visible = true;
             this.actionsMenu.limit = null;
         }
@@ -385,7 +384,7 @@ var Menu = new Phaser.Class({
         return statusItem;
     },
     moveSelectionUp: function () {
-        if(this.limit !== null && this.menuItemIndex >= this.limit)
+        if (this.limit !== null && this.menuItemIndex >= this.limit)
             return;
         this.menuItems[this.menuItemIndex].deselect();
         do {
@@ -396,7 +395,7 @@ var Menu = new Phaser.Class({
         this.menuItems[this.menuItemIndex].select();
     },
     moveSelectionDown: function () {
-        if(this.limit !== null && this.menuItemIndex <= this.limit)
+        if (this.limit !== null && this.menuItemIndex <= this.limit)
             return;
         this.menuItems[this.menuItemIndex].deselect();
         do {
