@@ -25,7 +25,7 @@ var MainMenu = new Phaser.Class({
         this.items.setColor('#cccf00');
         this.items.setInteractive();
         this.items.on('pointerdown', function () {
-            if(this.scene.index === 0) {
+            if (this.scene.index === 0) {
                 this.scene.scene.switch('ItemsMenu');
             }
             this.scene.deselectAll();
@@ -37,7 +37,7 @@ var MainMenu = new Phaser.Class({
         this.equipment.setColor('#000000');
         this.equipment.setInteractive();
         this.equipment.on('pointerdown', function () {
-            if(this.scene.index === 1) {
+            if (this.scene.index === 1) {
                 console.log('opened ' + this.scene.index)
             }
             this.scene.deselectAll();
@@ -50,7 +50,7 @@ var MainMenu = new Phaser.Class({
         this.abilities.setColor('#000000');
         this.abilities.setInteractive();
         this.abilities.on('pointerdown', function () {
-            if(this.scene.index === 2) {
+            if (this.scene.index === 2) {
                 console.log('opened ' + this.scene.index)
             }
             this.scene.deselectAll();
@@ -58,30 +58,46 @@ var MainMenu = new Phaser.Class({
             this.scene.abilities.setColor('#cccf00')
         });
 
-        this.save = this.add.text(205, 65, "Save");
+        this.save = this.add.text(205, 85, "Save");
         this.save.setColor('#000000');
         this.save.setInteractive();
         this.save.on('pointerdown', function () {
-            if(this.scene.index === 3) {
+            if (this.scene.index === 4) {
+                console.log('opened ' + this.scene.index)
+            }
+            this.scene.deselectAll();
+            this.scene.index = 4;
+            this.scene.save.setColor('#cccf00')
+        });
+
+
+        this.stats = this.add.text(205, 65, "Status");
+        this.stats.setColor('#000000');
+        this.stats.setInteractive();
+        this.stats.on('pointerdown', function () {
+            if (this.scene.index === 3) {
+                this.scene.scene.stop();
+                this.scene.scene.switch("Stats");
+
                 console.log('opened ' + this.scene.index)
             }
             this.scene.deselectAll();
             this.scene.index = 3;
-            this.scene.save.setColor('#cccf00')
+            this.scene.stats.setColor('#cccf00')
         });
 
-        this.exit = this.add.text(205, 85, "Exit");
+        this.exit = this.add.text(205, 105, "Exit");
         this.exit.setColor('#000000');
         this.exit.setInteractive();
         this.exit.on('pointerdown', function () {
-            if(this.scene.index === 4) {
+            if (this.scene.index === 5) {
                 this.scene.scene.stop();
                 this.scene.scene.get('InitialMap').scene.start('BootScene');
 
                 console.log('opened ' + this.scene.index)
             }
             this.scene.deselectAll();
-            this.scene.index = 4;
+            this.scene.index = 5;
             this.scene.exit.setColor('#cccf00')
         });
 
@@ -92,7 +108,7 @@ var MainMenu = new Phaser.Class({
         this.timer.setColor('#000000');
         this.timer.setScale(0.75);
 
-        this.buttons = [this.items, this.equipment, this.abilities, this.save, this.exit];
+        this.buttons = [this.items, this.equipment, this.abilities, this.stats, this.save, this.exit];
         this.input.keyboard.on("keydown", this.onKeyInput, this);
         this.index = 0;
 
@@ -110,14 +126,17 @@ var MainMenu = new Phaser.Class({
                 case 0:
                     this.scene.switch('ItemsMenu');
                     break;
-                case 4:
+                case 3:
+                    this.scene.switch("Stats");
+                    break;
+                case 5:
                     this.scene.stop();
                     this.scene.get('InitialMap').scene.start('BootScene');
                     break;
                 default:
                     console.log('error');
             }
-        } else if(event.code === 'Escape') {
+        } else if (event.code === 'Escape') {
             this.scene.stop();
         }
 
