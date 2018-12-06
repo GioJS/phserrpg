@@ -42,10 +42,12 @@ var BattleScene = new Phaser.Class({
 
         // return to WorldScene and sleep current BattleScene
         if (end.victory) {
+            this.time.delayedCall(5000, function() {
+                this.scene.sleep('UIScene');
 
-            this.scene.sleep('UIScene');
+                this.scene.switch('InitialMap');
+            }, [], this);
 
-            this.scene.switch('InitialMap');
         } else {
             this.events.emit("Message", "Game Over");
             this.time.addEvent({
@@ -78,7 +80,17 @@ var BattleScene = new Phaser.Class({
 
         var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0, 2, 0.35, 11, 5, 20);
         this.add.existing(dragonOrange);
+        var message = this.message;
+        var scene = this;
+        this.team[0].xpManager.emitter.on('nextLevel', function() {
+            scene.events.emit('Message', "Warrior increased level");
+        });
 
+        this.team[1].xpManager.emitter.on('nextLevel', function() {
+            scene.time.delayedCall(2100, function(){
+                scene.events.emit('Message', "Mage increased level");
+            });
+        });
         // array with heroes
         this.heroes = [warrior, mage];
         // array with enemies
@@ -175,6 +187,7 @@ var UIScene = new Phaser.Class({
         // the message describing the current action
 
         this.message = new Message(this, this.battleScene.events);
+
         this.add.existing(this.message);
     },
     create: function () {

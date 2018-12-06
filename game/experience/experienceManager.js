@@ -42,6 +42,7 @@ var ExperienceManager = (function () {
         this.nextLevel = 2;
         this.xp = 0;
         this.hero = hero;
+        this.emitter = new Phaser.Events.EventEmitter();
     }
 
     ExperienceManager.prototype.increaseLevel = function() {
@@ -53,6 +54,7 @@ var ExperienceManager = (function () {
         this.hero.magicDefence += 1;
         this.hero.magicDamage += 1;
         this.hero.critDamage += 1;
+        this.emitter.emit('nextLevel');
     };
 
     ExperienceManager.prototype.gainXp = function(xp) {
