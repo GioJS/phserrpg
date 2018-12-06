@@ -83,12 +83,12 @@ var BattleScene = new Phaser.Class({
         var message = this.message;
         var scene = this;
         this.team[0].xpManager.emitter.on('nextLevel', function() {
-            scene.events.emit('Message', "Warrior increased level");
+            scene.events.emit('Message', "Warrior level up");
         });
 
         this.team[1].xpManager.emitter.on('nextLevel', function() {
             scene.time.delayedCall(2100, function(){
-                scene.events.emit('Message', "Mage increased level");
+                scene.events.emit('Message', "Mage level up");
             });
         });
         // array with heroes
