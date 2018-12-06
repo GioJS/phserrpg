@@ -1,6 +1,6 @@
 var ItemsMenu = new Phaser.Class({
 
-    Extends: Phaser.Scene,
+    Extends: MainMenu,
 
     initialize:
 
@@ -160,13 +160,5 @@ var ItemsMenu = new Phaser.Class({
         }
 
         this.buttons[this.index].setColor('#cccf00');
-    },
-    deselectAll: function () {
-        this.buttons.forEach(function (item) {
-            item.setColor("#000000");
-        });
-    },
-    elapsed: function () {
-        getElapsedTime(this.timer);
     }
 });
