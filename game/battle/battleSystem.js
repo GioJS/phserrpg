@@ -38,18 +38,19 @@ var BattleScene = new Phaser.Class({
             });
         }
 
-        this.heroes.length = 0;
-        this.enemies.length = 0;
-        for (var i = 0; i < this.units.length; i++) {
-            // link item
-            this.units[i].destroy();
-        }
-        this.units.length = 0;
-        // sleep the UI
 
         // return to WorldScene and sleep current BattleScene
         if (end.victory) {
             this.time.delayedCall(10000, function () {
+                this.heroes.length = 0;
+                this.enemies.length = 0;
+                for (var i = 0; i < this.units.length; i++) {
+                    // link item
+                    this.units[i].destroy();
+                }
+                this.units.length = 0;
+                // sleep the UI
+
                 this.scene.sleep('UIScene');
 
                 this.scene.switch('InitialMap');
@@ -59,6 +60,14 @@ var BattleScene = new Phaser.Class({
             this.events.emit("Message", "Game Over");
             this.time.addEvent({
                 delay: 2000, callback: function () {
+                    this.heroes.length = 0;
+                    this.enemies.length = 0;
+                    for (var i = 0; i < this.units.length; i++) {
+                        // link item
+                        this.units[i].destroy();
+                    }
+                    this.units.length = 0;
+                    // sleep the UI
                     this.scene.sleep('UIScene');
                     this.scene.switch('BootScene');
                 }, callbackScope: this
