@@ -22,11 +22,13 @@ var BattleScene = new Phaser.Class({
 
         if (end.victory) {
             var enemies = this.enemies;
-            var heroesN = this.heroes.length;
+            var heroesN = this.heroes.filter(function (hero) { return hero.living }).length;
             this.team.forEach(function (hero) {
                 enemies.forEach(function (enemy) {
-                    hero.xpManager.gainXp(enemy.xp / heroesN);
-                    console.log("Hero has " + hero.xpManager.xp);
+                    if(hero.hp > 0) {
+                        hero.xpManager.gainXp(enemy.xp / heroesN);
+                        console.log("Hero has " + hero.xpManager.xp);
+                    }
                 });
             });
         }
