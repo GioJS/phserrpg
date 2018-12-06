@@ -19,6 +19,18 @@ var BattleScene = new Phaser.Class({
     },
     endBattle: function (end) {
         // clear state, remove sprites
+
+        if (end.victory) {
+            var enemies = this.enemies;
+            var heroesN = this.heroes.length;
+            this.team.forEach(function (hero) {
+                enemies.forEach(function (enemy) {
+                    hero.xpManager.gainXp(enemy.xp / heroesN);
+                    console.log("Hero has " + hero.xpManager.xp);
+                });
+            });
+        }
+
         this.heroes.length = 0;
         this.enemies.length = 0;
         for (var i = 0; i < this.units.length; i++) {
@@ -61,10 +73,10 @@ var BattleScene = new Phaser.Class({
         this.add.existing(mage);
 
 
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0, 5, 0.4, 8, 15);
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0, 5, 0.4, 8, 15, 20);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0, 2, 0.35, 11, 5);
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0, 2, 0.35, 11, 5, 20);
         this.add.existing(dragonOrange);
 
         // array with heroes

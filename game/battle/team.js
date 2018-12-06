@@ -175,6 +175,8 @@ var Team = (function () {
             critDamage: 5
         };
         this.heroes = [warrior, mage];
+        this.heroes[0].xpManager = new ExperienceManager(warrior);
+        this.heroes[1].xpManager = new ExperienceManager(mage);
     }
 
     return Team;
