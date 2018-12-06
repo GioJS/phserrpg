@@ -107,23 +107,27 @@ var InitialScene = new Phaser.Class({
         this.physics.add.collider(this.player, obstacles);
 
         //if (this.game.device.os.android) {
-            this.menuButton = this.add.text(5, 0, "Menu");
-            this.menuButton.setInteractive();
-            this.menuButton.setColor('#ffff21');
-            this.menuButton.setBackgroundColor("#ffffff");
-            this.menuButton.on('pointerdown', function () {
-                if (!this.scene.scene.menuOpen) {
-                    this.scene.movement.stop();
-                    this.scene.scene.menuOpen = true;
-                    this.scene.scene.launch('MainMenu');
-                } else {
-                    this.scene.movement.start();
-                    this.scene.scene.menuOpen = false;
-                    this.scene.scene.get('MainMenu').scene.stop();
-                }
-            });
+        this.menuButton = this.add.text(5, 0, "Menu");
+        this.menuButton.setInteractive();
+        this.menuButton.setColor('#ffff21');
+        this.menuButton.setBackgroundColor("#ffffff");
+        this.menuButton.setScrollFactor(0);
+        this.menuButton.on('pointerdown', function () {
+            this.setBackgroundColor('#0001ff');
+            if (!this.scene.scene.menuOpen) {
+                this.scene.movement.stop();
+                this.scene.scene.menuOpen = true;
+                this.scene.scene.launch('MainMenu');
+            } else {
+                this.scene.movement.start();
+                this.scene.scene.menuOpen = false;
+                this.scene.scene.get('MainMenu').scene.stop();
+            }
+        });
 
-
+        this.menuButton.on('pointerup', function () {
+            this.setBackgroundColor('#ffffff');
+        });
         //}
         // where the enemies will be
         this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});

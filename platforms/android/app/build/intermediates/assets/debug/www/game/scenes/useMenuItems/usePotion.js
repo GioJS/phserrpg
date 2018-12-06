@@ -1,6 +1,6 @@
 var UsePotion = new Phaser.Class({
 
-    Extends: Phaser.Scene,
+    Extends: MainMenu,
 
     initialize:
 
@@ -116,7 +116,7 @@ var UsePotion = new Phaser.Class({
         } else if (event.code === 'KeyX') {
             switch (this.index) {
                 case 0:
-                    if(this.team[0].hp === this.team[0].maxHp || this.team[0].hp === 0)
+                    if (this.team[0].hp === this.team[0].maxHp || this.team[0].hp === 0)
                         return;
                     if (this.team[0].maxHp - this.team[0].hp <= 100) {
                         this.team[0].hp += this.team[0].maxHp - this.team[0].hp;
@@ -127,7 +127,7 @@ var UsePotion = new Phaser.Class({
                     this.warrior.setText("Warrior " + this.team[0].hp + "/" + this.team[0].maxHp);
                     break;
                 case 1:
-                    if(this.team[1].hp === this.team[1].maxHp || this.team[1].hp === 0)
+                    if (this.team[1].hp === this.team[1].maxHp || this.team[1].hp === 0)
                         return;
                     if (this.team[1].maxHp - this.team[1].hp <= 100) {
                         this.team[1].hp += this.team[1].maxHp - this.team[1].hp;
@@ -157,13 +157,5 @@ var UsePotion = new Phaser.Class({
         }
 
         this.buttons[this.index].setColor('#cccf00');
-    },
-    deselectAll: function () {
-        this.buttons.forEach(function (item) {
-            item.setColor("#000000");
-        });
-    },
-    elapsed: function () {
-        getElapsedTime(this.timer);
     }
 });

@@ -139,8 +139,10 @@ var Movement = (function() {
         }
         //animation
         if (this.moveLeft || this.moveLeftT) {
+            this.player.flipX = true;
             this.player.anims.play('left', true);
         } else if (this.moveRight || this.moveRightT) {
+            this.player.flipX = false;
             this.player.anims.play('right', true);
         } else if (this.moveUp || this.moveUpT) {
             this.player.anims.play('up', true);

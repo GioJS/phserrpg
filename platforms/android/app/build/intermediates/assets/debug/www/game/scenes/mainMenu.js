@@ -132,11 +132,9 @@ var MainMenu = new Phaser.Class({
         this.buttons[this.index].setColor('#cccf00');
     },
     deselectAll: function () {
-        this.items.setColor("#000000");
-        this.abilities.setColor("#000000");
-        this.equipment.setColor("#000000");
-        this.save.setColor("#000000");
-        this.exit.setColor("#000000");
+        this.buttons.forEach(function (item) {
+            item.setColor("#000000");
+        });
     },
     elapsed: function () {
         getElapsedTime(this.timer);

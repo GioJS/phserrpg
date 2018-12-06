@@ -30,18 +30,54 @@ var Unit = new Phaser.Class({
     },
     magic: function (name, target) {
         if (target.living) {
+            var particles = this.scene.add.particles('flares');
+            if(name === 'blizzard') {
 
-            var crit = Math.random() >= this.critProb;
-            console.log(target);
-            var damage;
-            if ((this.magicDamage + this.critDamage) <= target.magicDefence)
-                damage = 0;
-            else
-                damage = this.magicDamage - target.magicDefence + (crit ? this.critDamage : 0);
-            target.takeDamage(damage);
-            this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " casts " + name + " " + target.type + " for " + damage + " damage");
+                particles.createEmitter({
+                    frame: 'blue',
+                    x: target.x,
+                    y: target.y,
+                    speed: 200,
+                    scale: {start: 0.4, end: 0},
+                    lifespan: 100,
+                    blendMode: 'ADD'
+                });
+            }
+             else if (name === 'fire') {
+                    particles.createEmitter({
+                        frame: 'red',
+                        x: target.x,
+                        y: target.y,
+                        speed: 200,
+                        scale: { start: 0.4, end: 0 },
+                        lifespan: 100,
+                        blendMode: 'ADD'
+                    });
+                } else if(name === 'thunder') {
+                    particles.createEmitter({
+                        frame: 'yellow',
+                        x: target.x,
+                        y: target.y,
+                        speed: 200,
+                        scale: { start: 0.4, end: 0 },
+                        lifespan: 100,
+                        blendMode: 'ADD'
+                    });
+                }
 
+                this.scene.time.delayedCall(1000, function() {
+                    particles.destroy();
+                    var crit = Math.random() >= this.critProb;
+                    console.log(target);
+                    var damage;
+                    if ((this.magicDamage + this.critDamage) <= target.magicDefence)
+                        damage = 0;
+                    else
+                        damage = this.magicDamage - target.magicDefence + (crit ? this.critDamage : 0);
+                    target.takeDamage(damage);
+                    this.scene.events.emit("Message", this.type + (crit ? ' critical' : '') + " casts " + name + " " + target.type + " for " + damage + " damage");
 
+                }, [], this);
         }
     },
     attack: function (target) {
@@ -139,6 +175,8 @@ var Team = (function () {
             critDamage: 5
         };
         this.heroes = [warrior, mage];
+        this.heroes[0].xpManager = new ExperienceManager(warrior);
+        this.heroes[1].xpManager = new ExperienceManager(mage);
     }
 
     return Team;

@@ -19,25 +19,55 @@ var BattleScene = new Phaser.Class({
     },
     endBattle: function (end) {
         // clear state, remove sprites
-        this.heroes.length = 0;
-        this.enemies.length = 0;
-        for (var i = 0; i < this.units.length; i++) {
-            // link item
-            this.units[i].destroy();
+        var scene = this;
+        if (end.victory) {
+            var enemies = this.enemies;
+            var heroesN = this.heroes.filter(function (hero) {
+                return hero.living
+            }).length;
+            this.team.forEach(function (hero, index) {
+                enemies.forEach(function (enemy) {
+                    if (hero.hp > 0) {
+                        var gained = enemy.xp / heroesN;
+                        scene.time.delayedCall(2000*index, function() {
+                            scene.events.emit('Message', index === 0 ? "Warrior gained " + gained + "XP" : "Mage gained " + gained + "XP");
+                        });
+                        hero.xpManager.gainXp(gained);
+                    }
+                });
+            });
         }
-        this.units.length = 0;
-        // sleep the UI
+
 
         // return to WorldScene and sleep current BattleScene
         if (end.victory) {
+            this.time.delayedCall(10000, function () {
+                this.heroes.length = 0;
+                this.enemies.length = 0;
+                for (var i = 0; i < this.units.length; i++) {
+                    // link item
+                    this.units[i].destroy();
+                }
+                this.units.length = 0;
+                // sleep the UI
 
-            this.scene.sleep('UIScene');
+                this.scene.sleep('UIScene');
 
-            this.scene.switch('InitialMap');
+                this.scene.switch('InitialMap');
+            }, [], this);
+
         } else {
             this.events.emit("Message", "Game Over");
             this.time.addEvent({
                 delay: 2000, callback: function () {
+                    this.heroes.length = 0;
+                    this.enemies.length = 0;
+                    for (var i = 0; i < this.units.length; i++) {
+                        // link item
+                        this.units[i].destroy();
+                    }
+                    this.units.length = 0;
+                    // sleep the UI
                     this.scene.sleep('UIScene');
                     this.scene.switch('BootScene');
                 }, callbackScope: this
@@ -61,12 +91,24 @@ var BattleScene = new Phaser.Class({
         this.add.existing(mage);
 
 
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0, 5, 0.4, 8, 15);
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 12, 0, 5, 0.4, 8, 15, 20);
         this.add.existing(dragonblue);
 
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0, 2, 0.35, 11, 5);
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null, "Dragon2", 50, 15, 0, 2, 0.35, 11, 5, 20);
         this.add.existing(dragonOrange);
+        var message = this.message;
+        var scene = this;
+        this.team[0].xpManager.emitter.on('nextLevel', function () {
+            scene.time.delayedCall(4100, function () {
+                scene.events.emit('Message', "Warrior level up");
+            });
+        });
 
+        this.team[1].xpManager.emitter.on('nextLevel', function () {
+            scene.time.delayedCall(6100, function () {
+                scene.events.emit('Message', "Mage level up");
+            });
+        });
         // array with heroes
         this.heroes = [warrior, mage];
         // array with enemies
@@ -163,6 +205,7 @@ var UIScene = new Phaser.Class({
         // the message describing the current action
 
         this.message = new Message(this, this.battleScene.events);
+
         this.add.existing(this.message);
     },
     create: function () {
