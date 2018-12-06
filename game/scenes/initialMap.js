@@ -113,6 +113,7 @@ var InitialScene = new Phaser.Class({
         this.menuButton.setBackgroundColor("#ffffff");
         this.menuButton.setScrollFactor(0);
         this.menuButton.on('pointerdown', function () {
+            this.setBackgroundColor('#0001ff');
             if (!this.scene.scene.menuOpen) {
                 this.scene.movement.stop();
                 this.scene.scene.menuOpen = true;
@@ -124,7 +125,9 @@ var InitialScene = new Phaser.Class({
             }
         });
 
-
+        this.menuButton.on('pointerup', function () {
+            this.setBackgroundColor('#ffffff');
+        });
         //}
         // where the enemies will be
         this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});
