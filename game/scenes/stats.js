@@ -29,12 +29,12 @@ var Status = new Phaser.Class({
         this.team.forEach(function (hero, index) {
             var h;
             if (index === 0) {
-                h = "Warrior\n lvl " + hero.xpManager.level + "xp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
-                scene.add.text(205, 5, h).setColor('#000000').setScale(0.8);
+                h = "Warrior lvl " + hero.xpManager.level + "\n xp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
+                scene.w = scene.add.text(205, 5, h).setColor('#000000').setScale(0.8);
 
             } else if (index === 1) {
                 h = "Mage lvl " + hero.xpManager.level + "\n xp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
-                scene.add.text(205, 55, h).setColor('#000000').setScale(0.8);
+                scene.m = scene.add.text(205, 55, h).setColor('#000000').setScale(0.8);
 
             }
         });
@@ -44,14 +44,6 @@ var Status = new Phaser.Class({
         this.back.setColor('#000000');
         this.back.setInteractive();
 
-        this.back.on('pointerdown', function () {
-            this.scene.deselectAll();
-
-            this.scene.scene.switch('MainMenu');
-            this.scene.back.setColor('#cccf00');
-            this.scene.index = 0;
-        });
-        this.buttons.push(this.back);
 
         this.timer = this.add.text(205, 220, hours + " : " + minutes + " : " + seconds);
 
@@ -59,21 +51,30 @@ var Status = new Phaser.Class({
         this.timer.setColor('#000000');
         this.timer.setScale(0.75);
 
+
+        this.back.on('pointerdown', function () {
+            this.scene.back.setColor('#cccf00');
+            if(this.scene.index === 0)
+                this.scene.scene.switch('MainMenu');
+            this.scene.index = 0;
+        });
+        this.buttons.push(this.back);
+
         //this.buttons = [this.items, this.equipment, this.abilities, this.save, this.exit];
         this.input.keyboard.on("keydown", this.onKeyInput, this);
-        this.index = 0;
+        this.index = -1;
 
         this.time.addEvent({delay: 1000, callback: this.elapsed, callbackScope: this, repeat: -1});
         this.sys.events.on('wake', function () {
             this.team.forEach(function (hero, index) {
                 var h;
                 if (index === 0) {
-                    h = "Warrior\n lvl " + hero.xpManager.level + "xp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
-                    scene.add.text(205, 5, h).setColor('#000000').setScale(0.8);
+                    h = "Warriorlvl " + hero.xpManager.level + "\nxp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
+                    scene.w.setText(h);
 
                 } else if (index === 1) {
                     h = "Mage lvl " + hero.xpManager.level + "\n xp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
-                    scene.add.text(205, 55, h).setColor('#000000').setScale(0.8);
+                    scene.m.setText(h);
 
                 }
             });

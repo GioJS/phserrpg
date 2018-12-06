@@ -85,6 +85,7 @@ var UseRevive = new Phaser.Class({
         this.timer.setColor('#000000');
         this.timer.setScale(0.75);
 
+
         //this.buttons = [this.items, this.equipment, this.abilities, this.save, this.exit];
         this.input.keyboard.on("keydown", this.onKeyInput, this);
         this.index = 0;
