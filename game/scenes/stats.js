@@ -65,7 +65,18 @@ var Status = new Phaser.Class({
 
         this.time.addEvent({delay: 1000, callback: this.elapsed, callbackScope: this, repeat: -1});
         this.sys.events.on('wake', function () {
+            this.team.forEach(function (hero, index) {
+                var h;
+                if (index === 0) {
+                    h = "Warrior\n lvl " + hero.xpManager.level + "xp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
+                    scene.add.text(205, 5, h).setColor('#000000').setScale(0.8);
 
+                } else if (index === 1) {
+                    h = "Mage lvl " + hero.xpManager.level + "\n xp: " + hero.xpManager.xp + "\n next lvl: " + levels[hero.xpManager.nextLevel];
+                    scene.add.text(205, 55, h).setColor('#000000').setScale(0.8);
+
+                }
+            });
         }, this);
     },
     onKeyInput: function (event) {
